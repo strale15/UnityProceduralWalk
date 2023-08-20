@@ -16,7 +16,7 @@ public class WalkingScript : MonoBehaviour
     private Vector3 rightFootStartPosition;
     private Vector3 hipsStartPosition;
 
-    private Vector3[] goalsArray = new Vector3[3];
+    private Vector3[] goalsArray;
     private float legLength;
     private const float modellegHeight = 0.7160985f;
     private float lerp = 0;
@@ -39,9 +39,11 @@ public class WalkingScript : MonoBehaviour
         legLength = Vector3.Distance(leftFootBase.position, hipsBase.position);
 
         //Fill array with goals (starting with right foot)
-        goalsArray[0] = new Vector3(0.238000005f, 0.131999999f, 0.736000001f);
-        goalsArray[1] = new Vector3(-0.103f,0.131999999f,1.09099996f);
-        goalsArray[2] = new Vector3(0.238000005f, 0.131999999f, 1.78600001f);
+        goalsArray = new Vector3[4];
+        goalsArray[0] = new Vector3(0.238000005f,   0.12f, 0.736000001f);
+        goalsArray[1] = new Vector3(-0.103f,        0.12f,1.09099996f);
+        goalsArray[2] = new Vector3(0.238000005f,   0.12f, 1.78600001f);
+        goalsArray[3] = new Vector3(-0.078000005f,  0.12f, 1.78600001f);
     }
 
     void Update()
@@ -61,11 +63,12 @@ public class WalkingScript : MonoBehaviour
 
             hips.position = Vector3.Lerp(hipsStartPosition, CalculateHipsPosition(leftFootGoal, rightFootStartPosition), lerp);
 
+            lerp += stepSpeed * Time.deltaTime;
+
             Vector3 currentFoorPos = Vector3.Lerp(leftFootStartPosition, leftFootGoal, lerp);
             currentFoorPos.y += Mathf.Sin(lerp * Mathf.PI) * stepHegiht;
             leftFoot.position = currentFoorPos;
 
-            lerp += stepSpeed * Time.deltaTime;
 
             if (lerp > 1f) 
             {
@@ -87,11 +90,12 @@ public class WalkingScript : MonoBehaviour
 
             hips.position = Vector3.Lerp(hipsStartPosition, CalculateHipsPosition(rightFootGoal, leftFootStartPosition), lerp);
 
+            lerp += stepSpeed * Time.deltaTime;
+
             Vector3 currentFoorPos = Vector3.Lerp(rightFootStartPosition, rightFootGoal, lerp);
             currentFoorPos.y += Mathf.Sin(lerp * Mathf.PI) * stepHegiht;
             rightFoot.position = currentFoorPos;
 
-            lerp += stepSpeed * Time.deltaTime;
 
             if (lerp > 1f) 
             {
