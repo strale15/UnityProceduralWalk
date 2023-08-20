@@ -43,7 +43,7 @@ public class WalkingScript : MonoBehaviour
         goalsArray[0] = new Vector3(0.238000005f,   0.12f, 0.736000001f);
         goalsArray[1] = new Vector3(-0.103f,        0.12f,1.09099996f);
         goalsArray[2] = new Vector3(0.238000005f,   0.12f, 1.78600001f);
-        goalsArray[3] = new Vector3(-0.078000005f,  0.12f, 1.78600001f);
+        goalsArray[3] = new Vector3(-0.0289999992f, 0.320000011f, 1.78600001f);
     }
 
     void Update()
