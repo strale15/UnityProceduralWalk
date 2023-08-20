@@ -534,7 +534,7 @@ Transform:
   m_GameObject: {fileID: 824577177}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.123, y: 0.613, z: 0.78}
+  m_LocalPosition: {x: 0.238, y: 0.132, z: 1.786}
   m_LocalScale: {x: 0.12495, y: 0.12495, z: 0.12495}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -850,8 +850,7 @@ MonoBehaviour:
   leftFootBase: {fileID: 609157668}
   rightFootBase: {fileID: 1814315391}
   hipsBase: {fileID: 1378976797}
-  hipHeight: 0
-  stepSpeed: 0.4
+  stepSpeed: 0.2
   stepHegiht: 0.2
 --- !u!4 &1076068847 stripped
 Transform:

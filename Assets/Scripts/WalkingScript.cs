@@ -14,70 +14,112 @@ public class WalkingScript : MonoBehaviour
 
     private Vector3 leftFootStartPosition;
     private Vector3 rightFootStartPosition;
-    private Vector3 leftFootEndPosition;
-    private Vector3 rightFootEndPosition;
-    private Vector3 rightFootGoal;
     private Vector3 hipsStartPosition;
+
+    private Vector3[] goalsArray = new Vector3[3];
     private float legLength;
-    private float feetDistance;
     private const float modellegHeight = 0.7160985f;
     private float lerp = 0;
+    private Vector3 leftFootGoal = new Vector3();
+    private Vector3 rightFootGoal = new Vector3();
 
-    [SerializeField]
-    private float hipHeight;
+    private bool leftFootTurn = false;
+    private int index = 0;
 
-    [SerializeField]
-    private float stepSpeed = 0.2f;
+    public float stepSpeed = 0.2f;
+    public float stepHegiht = 0.2f;
 
-    [SerializeField]
-    private float stepHegiht = 0.2f;
-
-    private Vector3 hipPosition;
+    
     void Start()
     {
         leftFootStartPosition = leftFoot.position;
         rightFootStartPosition = rightFoot.position;
         hipsStartPosition = hips.position;
 
-
-        //rightFootGoal = new Vector3(0.123000003f,0.131999999f,1.205f);
-        rightFootGoal = new Vector3(0.123000003f, 0.612999976f, 0.779999971f);
-
         legLength = Vector3.Distance(leftFootBase.position, hipsBase.position);
-        feetDistance = Vector3.Distance(rightFootBase.position, leftFootBase.position)/2;
 
-        hipHeight = legLength * legLength - feetDistance * feetDistance;
-        Vector3 feetMiddlepoint = Vector3.Lerp(leftFootBase.position, rightFootBase.position, 0.5f); //Ovo nece raditi ako se stopala na razictim visinama
-
-        hipPosition = new Vector3(feetMiddlepoint.x, modellegHeight - hipHeight, feetMiddlepoint.z);
-        //hips.position = hipPosition;
+        //Fill array with goals (starting with right foot)
+        goalsArray[0] = new Vector3(0.238000005f, 0.131999999f, 0.736000001f);
+        goalsArray[1] = new Vector3(-0.103f,0.131999999f,1.09099996f);
+        goalsArray[2] = new Vector3(0.238000005f, 0.131999999f, 1.78600001f);
     }
 
     void Update()
-    {
-        leftFootEndPosition = leftFootStartPosition;
-        rightFootEndPosition = rightFootStartPosition;
+    {    
+        if(index >= goalsArray.Length && lerp == 0f)
+        {
+            return;
+        }
 
-        leftFoot.position = leftFootEndPosition;
-        //rightFoot.position = rightFootEndPosition;
+        if(leftFootTurn) //Leva noga se pomera
+        {
+            if(lerp == 0f)
+            {
+                leftFootGoal = goalsArray[index];
+            }
+            rightFoot.position = rightFootStartPosition;
 
-        hips.position = Vector3.Lerp(hipsStartPosition, CalculateHipsPosition(leftFoot.position, rightFootGoal), lerp);
-        Vector3 rightFoorPos;
-        rightFoorPos = Vector3.Lerp(rightFootStartPosition, rightFootGoal, lerp);
-        rightFoorPos.y += Mathf.Sin(lerp * Mathf.PI) * stepHegiht;
-        rightFoot.position = rightFoorPos;
+            hips.position = Vector3.Lerp(hipsStartPosition, CalculateHipsPosition(leftFootGoal, rightFootStartPosition), lerp);
 
-        lerp += stepSpeed * Time.deltaTime;
-        if (lerp > 1f) { lerp = 1f; }
+            Vector3 currentFoorPos = Vector3.Lerp(leftFootStartPosition, leftFootGoal, lerp);
+            currentFoorPos.y += Mathf.Sin(lerp * Mathf.PI) * stepHegiht;
+            leftFoot.position = currentFoorPos;
+
+            lerp += stepSpeed * Time.deltaTime;
+
+            if (lerp > 1f) 
+            {
+                leftFootTurn = !leftFootTurn;
+                leftFootStartPosition = currentFoorPos;
+                hipsStartPosition = hips.position;
+                lerp = 0f;
+                index++;
+            }
+
+        } else //Desna noga se pomera
+        {
+            if(lerp == 0f)
+            {
+                rightFootGoal = goalsArray[index];
+            }
+
+            leftFoot.position = leftFootStartPosition;
+
+            hips.position = Vector3.Lerp(hipsStartPosition, CalculateHipsPosition(rightFootGoal, leftFootStartPosition), lerp);
+
+            Vector3 currentFoorPos = Vector3.Lerp(rightFootStartPosition, rightFootGoal, lerp);
+            currentFoorPos.y += Mathf.Sin(lerp * Mathf.PI) * stepHegiht;
+            rightFoot.position = currentFoorPos;
+
+            lerp += stepSpeed * Time.deltaTime;
+
+            if (lerp > 1f) 
+            {
+                leftFootTurn = !leftFootTurn;
+                rightFootStartPosition = currentFoorPos;
+                hipsStartPosition = hips.position;
+                lerp = 0f;
+                index++;
+            }
+        }
+
     }
 
     private Vector3 CalculateHipsPosition(Vector3 leftFootPosition, Vector3 rightFootPoition)
     {
+        if(leftFootPosition.y < rightFootPoition.y)
+        {
+            rightFootPoition.y = leftFootPosition.y;
+        } else
+        {
+            leftFootPosition.y = rightFootPoition.y;
+        }
+
         float feetDist = Vector3.Distance(rightFootPoition, leftFootPosition)/2;
         float hipHeight = legLength * legLength - feetDist * feetDist;
-        Vector3 feetMiddlepoint = Vector3.Lerp(leftFootPosition, rightFootPoition, 0.5f); //Ovo nece raditi ako se stopala na razictim visinama
 
-        //Debug.Log(hipHeight);
+        Vector3 feetMiddlepoint = Vector3.Lerp(leftFootPosition, rightFootPoition, 0.5f); 
+
         return new Vector3(feetMiddlepoint.x, hipHeight - modellegHeight, feetMiddlepoint.z);
         
     } 
