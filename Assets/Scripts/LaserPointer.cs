@@ -6,9 +6,12 @@ public class LaserPointer : MonoBehaviour
 {
     public LayerMask mask;
     public Transform marker;
+    public WalkingScript walkingScript;
+    public GameObject feetMark1;
+    public GameObject feetMark2;
 
     private RaycastHit hitInfo;
-    private bool rayHit;
+    private bool leftFeet = false;
     void Start()
     {
         
@@ -19,12 +22,29 @@ public class LaserPointer : MonoBehaviour
     {
         Ray ray = new Ray(transform.position, transform.forward);
 
-        rayHit = false;
         if(Physics.Raycast(ray, out hitInfo, 30f, mask))
         {
-            if(Input.GetKey(KeyCode.E))
+            if(Input.GetKeyDown(KeyCode.E))
             {
-                Debug.Log(hitInfo.point);
+                Vector3 stepGoal = hitInfo.point;
+                stepGoal.y += 0.1154f;
+                stepGoal.z -= 0.1f;
+
+                //Dodaj u niz za hodanje
+                walkingScript.goalsArray.AddLast(stepGoal);
+                Debug.Log(walkingScript.goalsArray.Count);
+
+                //Nacrtaj stopu
+                if(leftFeet)
+                {
+                    Instantiate(feetMark1, hitInfo.point, Quaternion.Euler(90, 0, 0));
+                    leftFeet = false;
+                } else
+                {
+                    Instantiate(feetMark2, hitInfo.point, Quaternion.Euler(90, 0, 0));
+                    leftFeet = true;
+                }
+
             }
             
             marker.position = hitInfo.point;
@@ -33,6 +53,11 @@ public class LaserPointer : MonoBehaviour
         } else
         {
             marker.localScale = new Vector3(0, 0, 0);
+        }
+
+        if(Input.GetKeyDown(KeyCode.P))
+        {
+            walkingScript.isPaused = !walkingScript.isPaused;
         }
         
 
