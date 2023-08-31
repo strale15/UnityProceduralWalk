@@ -6,12 +6,14 @@ public class LaserPointer : MonoBehaviour
 {
     public LayerMask mask;
     public Transform marker;
-    public WalkingScript walkingScript;
     public GameObject feetMark1;
     public GameObject feetMark2;
 
+    public LinkedList<Vector3> goalsArray = new LinkedList<Vector3>();
+    public bool isPaused = true;
+    public bool leftFeet = false;
+
     private RaycastHit hitInfo;
-    private bool leftFeet = false;
     void Start()
     {
         
@@ -31,8 +33,7 @@ public class LaserPointer : MonoBehaviour
                 stepGoal.z -= 0.1f;
 
                 //Dodaj u niz za hodanje
-                walkingScript.goalsArray.AddLast(stepGoal);
-                Debug.Log(walkingScript.goalsArray.Count);
+                goalsArray.AddLast(stepGoal);
 
                 //Nacrtaj stopu
                 if(leftFeet)
@@ -57,7 +58,7 @@ public class LaserPointer : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.P))
         {
-            walkingScript.isPaused = !walkingScript.isPaused;
+            isPaused = !isPaused;
         }
         
 

@@ -12,12 +12,11 @@ public class WalkingScript : MonoBehaviour
     public Transform rightFootBase;
     public Transform hipsBase;
 
+    public LaserPointer laserPointerScript;
+
     private Vector3 leftFootStartPosition;
     private Vector3 rightFootStartPosition;
     private Vector3 hipsStartPosition;
-
-    public LinkedList<Vector3> goalsArray = new LinkedList<Vector3>();
-    public bool isPaused = true;
 
     private float legLength;
     private const float modellegHeight = 0.7160985f;
@@ -40,18 +39,13 @@ public class WalkingScript : MonoBehaviour
         hipsStartPosition = hips.position;
 
         legLength = Vector3.Distance(leftFootBase.position, hipsBase.position);
-
-        //Fill array with goals (starting with right foot)
-        /*goalsArray = new Vector3[4];
-        goalsArray[0] = new Vector3(0.238000005f,   0.12f, 0.736000001f);
-        goalsArray[1] = new Vector3(-0.103f,        0.12f,1.09099996f);
-        goalsArray[2] = new Vector3(0.238000005f,   0.12f, 1.78600001f);
-        goalsArray[3] = new Vector3(-0.0289999992f, 0.320000011f, 1.78600001f);*/
     }
 
     void Update()
-    {    
-        if((goalsArray.Count <= 0 && lerp == 0f) || (isPaused && lerp == 0f))
+    {
+        if (laserPointerScript.isPaused) return;
+
+        if((laserPointerScript.goalsArray.Count <= 0 && lerp == 0f) || (laserPointerScript.isPaused && lerp == 0f))
         {
             return;
         }
@@ -60,8 +54,8 @@ public class WalkingScript : MonoBehaviour
         {
             if(lerp == 0f)
             {
-                leftFootGoal = goalsArray.First.Value;
-                goalsArray.RemoveFirst();
+                leftFootGoal = laserPointerScript.goalsArray.First.Value;
+                laserPointerScript.goalsArray.RemoveFirst();
                 calculatedHipsPos = CalculateHipsPosition(leftFootGoal, rightFootStartPosition);
             }
             rightFoot.position = rightFootStartPosition;
@@ -88,8 +82,8 @@ public class WalkingScript : MonoBehaviour
         {
             if(lerp == 0f)
             {
-                rightFootGoal = goalsArray.First.Value;
-                goalsArray.RemoveFirst();
+                rightFootGoal = laserPointerScript.goalsArray.First.Value;
+                laserPointerScript.goalsArray.RemoveFirst();
                 calculatedHipsPos = CalculateHipsPosition(rightFootGoal, leftFootStartPosition);
             }
 
