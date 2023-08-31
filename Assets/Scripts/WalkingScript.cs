@@ -12,7 +12,7 @@ public class WalkingScript : MonoBehaviour
     public Transform rightFootBase;
     public Transform hipsBase;
 
-    public LaserPointer laserPointerScript;
+    private LaserPointer laserPointerScript;
 
     private Vector3 leftFootStartPosition;
     private Vector3 rightFootStartPosition;
@@ -25,20 +25,27 @@ public class WalkingScript : MonoBehaviour
     private Vector3 rightFootGoal = new Vector3();
     private Vector3 calculatedHipsPos = new Vector3();
 
-    private bool leftFootTurn = false;
     private int index = 0;
 
     public float stepSpeed = 0.2f;
-    public float stepHegiht = 0.2f;
+    public float stepHeight = 0.2f;
+    private float calculatedStepHeight = 0f;
 
     
     void Start()
     {
+        laserPointerScript = GameObject.FindObjectOfType<LaserPointer>();
+
+        SetupStartPositions();
+
+        legLength = Vector3.Distance(leftFootBase.position, hipsBase.position);
+    }
+
+    public void SetupStartPositions()
+    {
         leftFootStartPosition = leftFoot.position;
         rightFootStartPosition = rightFoot.position;
         hipsStartPosition = hips.position;
-
-        legLength = Vector3.Distance(leftFootBase.position, hipsBase.position);
     }
 
     void Update()
@@ -50,13 +57,14 @@ public class WalkingScript : MonoBehaviour
             return;
         }
 
-        if(leftFootTurn) //Leva noga se pomera
+        if(laserPointerScript.leftFootTurn) //Leva noga se pomera
         {
             if(lerp == 0f)
             {
                 leftFootGoal = laserPointerScript.goalsArray.First.Value;
                 laserPointerScript.goalsArray.RemoveFirst();
                 calculatedHipsPos = CalculateHipsPosition(leftFootGoal, rightFootStartPosition);
+                calculatedStepHeight = CalculateStepHeight(leftFootGoal, leftFootStartPosition, rightFootStartPosition);
             }
             rightFoot.position = rightFootStartPosition;
 
@@ -65,13 +73,13 @@ public class WalkingScript : MonoBehaviour
             hips.position = Vector3.Lerp(hipsStartPosition, calculatedHipsPos, lerp);
 
             Vector3 currentFoorPos = Vector3.Lerp(leftFootStartPosition, leftFootGoal, lerp);
-            currentFoorPos.y += Mathf.Sin(lerp * Mathf.PI) * stepHegiht;
+            currentFoorPos.y += Mathf.Sin(lerp * Mathf.PI) * calculatedStepHeight;
             leftFoot.position = currentFoorPos;
 
 
             if (lerp > 1f) 
             {
-                leftFootTurn = !leftFootTurn;
+                laserPointerScript.leftFootTurn = !laserPointerScript.leftFootTurn;
                 leftFootStartPosition = currentFoorPos;
                 hipsStartPosition = hips.position;
                 lerp = 0f;
@@ -85,6 +93,7 @@ public class WalkingScript : MonoBehaviour
                 rightFootGoal = laserPointerScript.goalsArray.First.Value;
                 laserPointerScript.goalsArray.RemoveFirst();
                 calculatedHipsPos = CalculateHipsPosition(rightFootGoal, leftFootStartPosition);
+                calculatedStepHeight = CalculateStepHeight(rightFootGoal, rightFootStartPosition, leftFootStartPosition);
             }
 
             leftFoot.position = leftFootStartPosition;
@@ -94,13 +103,13 @@ public class WalkingScript : MonoBehaviour
             hips.position = Vector3.Lerp(hipsStartPosition, calculatedHipsPos, lerp);
 
             Vector3 currentFoorPos = Vector3.Lerp(rightFootStartPosition, rightFootGoal, lerp);
-            currentFoorPos.y += Mathf.Sin(lerp * Mathf.PI) * stepHegiht;
+            currentFoorPos.y += Mathf.Sin(lerp * Mathf.PI) * calculatedStepHeight;
             rightFoot.position = currentFoorPos;
 
 
             if (lerp > 1f) 
             {
-                leftFootTurn = !leftFootTurn;
+                laserPointerScript.leftFootTurn = !laserPointerScript.leftFootTurn;
                 rightFootStartPosition = currentFoorPos;
                 hipsStartPosition = hips.position;
                 lerp = 0f;
@@ -133,4 +142,28 @@ public class WalkingScript : MonoBehaviour
         return new Vector3(feetMiddlepoint.x, hipHeight - modellegHeight + (feetY - 0.1154f), feetMiddlepoint.z);
         
     } 
+    
+    private float CalculateStepHeight(Vector3 goalPosition, Vector3 oldPostion, Vector3 otherFootPostion)
+    {
+        float correction = 0.2f;
+        float finalDiff = 0f;
+        float feetYDiff = goalPosition.y - oldPostion.y;
+        float otherFeetYDiff = otherFootPostion.y - oldPostion.y;
+
+        Debug.Log("Diff " + feetYDiff + " Other: " + otherFeetYDiff);
+
+        if(otherFeetYDiff > feetYDiff)
+        {
+            finalDiff = otherFeetYDiff + correction/2.2f;
+        } else
+        {
+            finalDiff = feetYDiff - correction;
+        }
+
+        if(finalDiff < 0f)
+        {
+            finalDiff = 0.1f;
+        }
+        return stepHeight + finalDiff;
+    }
 }

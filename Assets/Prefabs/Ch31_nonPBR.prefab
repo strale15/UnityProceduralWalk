@@ -217,7 +217,7 @@ Transform:
   m_GameObject: {fileID: 337855329469750802}
   serializedVersion: 2
   m_LocalRotation: {x: 7.2310195e-26, y: -1.0712554e-13, z: 6.7500427e-13, w: 1}
-  m_LocalPosition: {x: -0, y: 0.1236055, z: 4.4364581e-10}
+  m_LocalPosition: {x: -0.01, y: 0.124, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -498,14 +498,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1586823818831135126}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.12545769, y: 0.0048871343, z: 0.011269388, w: 0.99202293}
+  m_LocalRotation: {x: 0.58664525, y: 0.011271343, z: 0.004883174, w: 0.8097509}
   m_LocalPosition: {x: -2.5635102e-11, y: 0.14454563, z: -3.2090838e-10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 551140264612078989}
   m_Father: {fileID: 2680444588207696513}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 71.798, y: 4.404, z: 3.879}
 --- !u!1 &1628799404235326469
 GameObject:
   m_ObjectHideFlags: 0
@@ -906,14 +906,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3136702370551734204}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.1253719, y: -0.004955657, z: -0.0122029865, w: 0.9920224}
+  m_LocalRotation: {x: 0.5803195, y: -0.011915632, z: -0.0056116357, w: 0.8142825}
   m_LocalPosition: {x: 3.7524633e-11, y: 0.14454563, z: -3.197354e-10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2352441464743161894}
   m_Father: {fileID: 707241024428511269}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 70.901, y: -4.543, z: -4.025}
 --- !u!1 &3152322957242266534
 GameObject:
   m_ObjectHideFlags: 0
@@ -1892,7 +1892,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 5449181959292962173, guid: 768a53f2911e0f84785b3ff5ed77dfed, type: 3}
+  - {fileID: 2100000, guid: 3477ec3c8ac9055478e20b59ace552f8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3274,9 +3274,8 @@ MonoBehaviour:
   leftFootBase: {fileID: 1683551851107770321}
   rightFootBase: {fileID: 3367512096428447716}
   hipsBase: {fileID: 6809565268690006831}
-  isPaused: 1
-  stepSpeed: 0.6
-  stepHegiht: 0.1
+  stepSpeed: 1.4
+  stepHeight: 0.1
 --- !u!1 &9091883114397586950
 GameObject:
   m_ObjectHideFlags: 0
