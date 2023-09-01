@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 585893723015339738}
   - component: {fileID: 3018080042107976910}
   - component: {fileID: 5275683428040145618}
+  - component: {fileID: 8783996975356181186}
+  - component: {fileID: 7937670677173430346}
   m_Layer: 9
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -92,6 +94,42 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2027225753726147158}
   m_Enabled: 1
+--- !u!114 &8783996975356181186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027225753726147158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6573569bdaaaf074f8a89e48ba5d4589, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mask:
+    serializedVersion: 2
+    m_Bits: 128
+  marker: {fileID: 0}
+  feetMark1: {fileID: 7857052731564150859, guid: 9d6ea19a099359d4d8e76dc9bae1a0e9, type: 3}
+  feetMark2: {fileID: 1521385599532666187, guid: d05e2b5d6084c274cbcb55ef262ac2f6, type: 3}
+  playerPrefab: {fileID: 2185876973337987956, guid: 7bfe095450ec8e44e8e60f490f81dcf8, type: 3}
+  isPaused: 1
+  leftFootTurn: 0
+--- !u!114 &7937670677173430346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027225753726147158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94b6cc61229842b47a2ce40d43c55100, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sensX: 400
+  sensY: 400
+  playerBody: {fileID: 8317048470733124246}
 --- !u!1 &2187047710568830691
 GameObject:
   m_ObjectHideFlags: 0
@@ -102,8 +140,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8317048470733124246}
   - component: {fileID: 7848255604714448852}
-  - component: {fileID: 1313573657487131867}
-  - component: {fileID: 1211827427083191510}
+  - component: {fileID: 7038075252390346238}
   m_Layer: 9
   m_Name: CameraObj
   m_TagString: Untagged
@@ -153,7 +190,7 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1313573657487131867
+--- !u!114 &7038075252390346238
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -162,31 +199,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2187047710568830691}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94b6cc61229842b47a2ce40d43c55100, type: 3}
+  m_Script: {fileID: 11500000, guid: 3c268259330fc114ca0866b505a2160b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensX: 400
-  sensY: 400
   moveSpeed: 8
   flySpeed: 5
   characterController: {fileID: 7848255604714448852}
---- !u!114 &1211827427083191510
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2187047710568830691}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6573569bdaaaf074f8a89e48ba5d4589, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mask:
-    serializedVersion: 2
-    m_Bits: 128
-  marker: {fileID: 0}
-  feetMark1: {fileID: 7857052731564150859, guid: 9d6ea19a099359d4d8e76dc9bae1a0e9, type: 3}
-  feetMark2: {fileID: 1521385599532666187, guid: d05e2b5d6084c274cbcb55ef262ac2f6, type: 3}
-  isPaused: 1
-  leftFeet: 0

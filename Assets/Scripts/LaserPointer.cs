@@ -139,6 +139,7 @@ public class LaserPointer : MonoBehaviour
         feetMarkers.Clear();
         goalsArray.Clear();
         leftFootTurn = false;
+        leftFootDrawTurn = false;
         
     }
 }

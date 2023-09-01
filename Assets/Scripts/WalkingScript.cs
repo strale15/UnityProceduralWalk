@@ -26,6 +26,8 @@ public class WalkingScript : MonoBehaviour
     private Vector3 hipsStartPosition;
     private Vector3 leftArmStartPosition;
     private Vector3 rightArmStartPosition;
+    private Quaternion leftShoulderStartRotation;
+    private Quaternion rightShoulderStartRotation;
 
     private float legLength;
     private const float modellegHeight = 0.7160985f;
@@ -35,6 +37,10 @@ public class WalkingScript : MonoBehaviour
     private Vector3 calculatedHipsPos = new Vector3();
     private Vector3 leftArmGoal = new Vector3();
     private Vector3 rightArmGoal = new Vector3();
+    private Quaternion rightShoulderGoalRotation = new Quaternion();
+    private Quaternion leftShoulderGoalRotation = new Quaternion();
+    private Quaternion currentRightShoulderRotation = new Quaternion();
+    private Quaternion currentLeftShoulderRotation = new Quaternion();
     private float handHipDistance = 0;
 
     private int index = 0;
@@ -62,6 +68,9 @@ public class WalkingScript : MonoBehaviour
 
         leftArmStartPosition = leftArmTarget.position;
         rightArmStartPosition = rightArmTarget.position;
+
+        leftShoulderStartRotation = Quaternion.Euler(leftShoulder.localRotation.eulerAngles);
+        rightShoulderStartRotation = Quaternion.Euler(rightShoulder.localRotation.eulerAngles);
     }
 
     void Update()
@@ -83,8 +92,18 @@ public class WalkingScript : MonoBehaviour
                 calculatedStepHeight = CalculateStepHeight(leftFootGoal, leftFootStartPosition, rightFootStartPosition);
 
                 //Racunanje goal-a za ruke
-                rightArmGoal = new Vector3(calculatedHipsPos.x + handHipDistance, calculatedHipsPos.y + 1.1f, calculatedHipsPos.z + 0.2f);
-                leftArmGoal = new Vector3(calculatedHipsPos.x - handHipDistance, calculatedHipsPos.y + 1f , calculatedHipsPos.z - 0.1f);
+                rightArmGoal = new Vector3(calculatedHipsPos.x + handHipDistance, calculatedHipsPos.y + 1.05f, calculatedHipsPos.z + 0.1f);
+                leftArmGoal = new Vector3(calculatedHipsPos.x - handHipDistance, calculatedHipsPos.y + 1f , calculatedHipsPos.z - 0.07f);
+
+                //Pomeranje ramena
+                rightShoulderGoalRotation = Quaternion.Euler(
+                    rightShoulderStartRotation.eulerAngles.x, rightShoulderStartRotation.eulerAngles.y, rightShoulderStartRotation.eulerAngles.z + 25f);
+
+                leftShoulderGoalRotation = Quaternion.Euler(
+                    leftShoulderStartRotation.eulerAngles.x, leftShoulderStartRotation.eulerAngles.y, leftShoulderStartRotation.eulerAngles.z + 25f);
+
+                currentRightShoulderRotation = rightShoulder.localRotation;
+                currentLeftShoulderRotation = leftShoulder.localRotation;
             }
             rightFoot.position = rightFootStartPosition;
 
@@ -94,6 +113,10 @@ public class WalkingScript : MonoBehaviour
             //Pomeranje desne ruke u napred dok se leva noga pomera
             rightArmTarget.position = Vector3.Lerp(rightArmStartPosition, rightArmGoal, lerp);
             leftArmTarget.position = Vector3.Lerp(leftArmStartPosition, leftArmGoal, lerp);
+
+            //Slerp ramena
+            leftShoulder.localRotation = Quaternion.Slerp(currentLeftShoulderRotation, leftShoulderGoalRotation, lerp);
+            rightShoulder.localRotation = Quaternion.Slerp(currentRightShoulderRotation, rightShoulderGoalRotation, lerp);
 
             Vector3 currentFootPos = Vector3.Lerp(leftFootStartPosition, leftFootGoal, lerp);
             currentFootPos.y += Mathf.Sin(lerp * Mathf.PI) * calculatedStepHeight;
@@ -109,6 +132,9 @@ public class WalkingScript : MonoBehaviour
                 rightArmStartPosition = rightArmTarget.position;
                 leftArmStartPosition = leftArmTarget.position;
 
+                //rightShoulderStartRotation = rightShoulder.localRotation;
+                //leftShoulderStartRotation = leftShoulder.localRotation;
+
                 lerp = 0f;
                 index++;
             }
@@ -123,8 +149,18 @@ public class WalkingScript : MonoBehaviour
                 calculatedStepHeight = CalculateStepHeight(rightFootGoal, rightFootStartPosition, leftFootStartPosition);
 
                 //Racunanje goal-a za ruke
-                leftArmGoal = new Vector3(calculatedHipsPos.x - handHipDistance, calculatedHipsPos.y + 1.1f, calculatedHipsPos.z + 0.2f);
-                rightArmGoal = new Vector3(calculatedHipsPos.x + handHipDistance,calculatedHipsPos.y + 1f, calculatedHipsPos.z - 0.1f);
+                leftArmGoal = new Vector3(calculatedHipsPos.x - handHipDistance, calculatedHipsPos.y + 1.05f, calculatedHipsPos.z + 0.1f);
+                rightArmGoal = new Vector3(calculatedHipsPos.x + handHipDistance,calculatedHipsPos.y + 1f, calculatedHipsPos.z - 0.07f);
+
+                //Pomeranje ramena
+                rightShoulderGoalRotation = Quaternion.Euler(
+                    rightShoulderStartRotation.eulerAngles.x, rightShoulderStartRotation.eulerAngles.y, rightShoulderStartRotation.eulerAngles.z - 25f);
+
+                leftShoulderGoalRotation = Quaternion.Euler(
+                    leftShoulderStartRotation.eulerAngles.x, leftShoulderStartRotation.eulerAngles.y, leftShoulderStartRotation.eulerAngles.z - 25f);
+
+                currentRightShoulderRotation = rightShoulder.localRotation;
+                currentLeftShoulderRotation = leftShoulder.localRotation;
             }
 
             leftFoot.position = leftFootStartPosition;
@@ -135,6 +171,10 @@ public class WalkingScript : MonoBehaviour
             //Pomeranje desne ruke u napred dok se leva noga pomera
             rightArmTarget.position = Vector3.Lerp(rightArmStartPosition, rightArmGoal, lerp);
             leftArmTarget.position = Vector3.Lerp(leftArmStartPosition, leftArmGoal, lerp);
+
+            //Slerp ramena
+            leftShoulder.localRotation = Quaternion.Slerp(currentLeftShoulderRotation, leftShoulderGoalRotation, lerp);
+            rightShoulder.localRotation = Quaternion.Slerp(currentRightShoulderRotation, rightShoulderGoalRotation, lerp);
 
             Vector3 currentFoorPos = Vector3.Lerp(rightFootStartPosition, rightFootGoal, lerp);
             currentFoorPos.y += Mathf.Sin(lerp * Mathf.PI) * calculatedStepHeight;
@@ -149,6 +189,9 @@ public class WalkingScript : MonoBehaviour
 
                 rightArmStartPosition = rightArmTarget.position;
                 leftArmStartPosition = leftArmTarget.position;
+
+                //rightShoulderStartRotation = rightShoulder.localRotation;
+                //leftShoulderStartRotation = leftShoulder.localRotation;
 
                 lerp = 0f;
                 index++;
