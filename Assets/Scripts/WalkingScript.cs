@@ -8,6 +8,13 @@ public class WalkingScript : MonoBehaviour
     public Transform rightFoot;
     public Transform hips;
 
+    public Transform leftArmTarget;
+    public Transform rightArmTarget;
+    public Transform leftZbica;
+    public Transform rightZbica;
+    public Transform leftShoulder;
+    public Transform rightShoulder;
+
     public Transform leftFootBase;
     public Transform rightFootBase;
     public Transform hipsBase;
@@ -17,6 +24,8 @@ public class WalkingScript : MonoBehaviour
     private Vector3 leftFootStartPosition;
     private Vector3 rightFootStartPosition;
     private Vector3 hipsStartPosition;
+    private Vector3 leftArmStartPosition;
+    private Vector3 rightArmStartPosition;
 
     private float legLength;
     private const float modellegHeight = 0.7160985f;
@@ -24,6 +33,9 @@ public class WalkingScript : MonoBehaviour
     private Vector3 leftFootGoal = new Vector3();
     private Vector3 rightFootGoal = new Vector3();
     private Vector3 calculatedHipsPos = new Vector3();
+    private Vector3 leftArmGoal = new Vector3();
+    private Vector3 rightArmGoal = new Vector3();
+    private float handHipDistance = 0;
 
     private int index = 0;
 
@@ -39,6 +51,7 @@ public class WalkingScript : MonoBehaviour
         SetupStartPositions();
 
         legLength = Vector3.Distance(leftFootBase.position, hipsBase.position);
+        handHipDistance = Mathf.Abs(hipsBase.position.x - rightArmTarget.position.x);
     }
 
     public void SetupStartPositions()
@@ -46,6 +59,9 @@ public class WalkingScript : MonoBehaviour
         leftFootStartPosition = leftFoot.position;
         rightFootStartPosition = rightFoot.position;
         hipsStartPosition = hips.position;
+
+        leftArmStartPosition = leftArmTarget.position;
+        rightArmStartPosition = rightArmTarget.position;
     }
 
     void Update()
@@ -65,23 +81,34 @@ public class WalkingScript : MonoBehaviour
                 laserPointerScript.goalsArray.RemoveFirst();
                 calculatedHipsPos = CalculateHipsPosition(leftFootGoal, rightFootStartPosition);
                 calculatedStepHeight = CalculateStepHeight(leftFootGoal, leftFootStartPosition, rightFootStartPosition);
+
+                //Racunanje goal-a za ruke
+                rightArmGoal = new Vector3(calculatedHipsPos.x + handHipDistance, calculatedHipsPos.y + 1.1f, calculatedHipsPos.z + 0.2f);
+                leftArmGoal = new Vector3(calculatedHipsPos.x - handHipDistance, calculatedHipsPos.y + 1f , calculatedHipsPos.z - 0.1f);
             }
             rightFoot.position = rightFootStartPosition;
 
             lerp += stepSpeed * Time.deltaTime;
 
             hips.position = Vector3.Lerp(hipsStartPosition, calculatedHipsPos, lerp);
+            //Pomeranje desne ruke u napred dok se leva noga pomera
+            rightArmTarget.position = Vector3.Lerp(rightArmStartPosition, rightArmGoal, lerp);
+            leftArmTarget.position = Vector3.Lerp(leftArmStartPosition, leftArmGoal, lerp);
 
-            Vector3 currentFoorPos = Vector3.Lerp(leftFootStartPosition, leftFootGoal, lerp);
-            currentFoorPos.y += Mathf.Sin(lerp * Mathf.PI) * calculatedStepHeight;
-            leftFoot.position = currentFoorPos;
+            Vector3 currentFootPos = Vector3.Lerp(leftFootStartPosition, leftFootGoal, lerp);
+            currentFootPos.y += Mathf.Sin(lerp * Mathf.PI) * calculatedStepHeight;
+            leftFoot.position = currentFootPos;
 
 
             if (lerp > 1f) 
             {
                 laserPointerScript.leftFootTurn = !laserPointerScript.leftFootTurn;
-                leftFootStartPosition = currentFoorPos;
+                leftFootStartPosition = currentFootPos;
                 hipsStartPosition = hips.position;
+
+                rightArmStartPosition = rightArmTarget.position;
+                leftArmStartPosition = leftArmTarget.position;
+
                 lerp = 0f;
                 index++;
             }
@@ -94,6 +121,10 @@ public class WalkingScript : MonoBehaviour
                 laserPointerScript.goalsArray.RemoveFirst();
                 calculatedHipsPos = CalculateHipsPosition(rightFootGoal, leftFootStartPosition);
                 calculatedStepHeight = CalculateStepHeight(rightFootGoal, rightFootStartPosition, leftFootStartPosition);
+
+                //Racunanje goal-a za ruke
+                leftArmGoal = new Vector3(calculatedHipsPos.x - handHipDistance, calculatedHipsPos.y + 1.1f, calculatedHipsPos.z + 0.2f);
+                rightArmGoal = new Vector3(calculatedHipsPos.x + handHipDistance,calculatedHipsPos.y + 1f, calculatedHipsPos.z - 0.1f);
             }
 
             leftFoot.position = leftFootStartPosition;
@@ -101,6 +132,9 @@ public class WalkingScript : MonoBehaviour
             lerp += stepSpeed * Time.deltaTime;
 
             hips.position = Vector3.Lerp(hipsStartPosition, calculatedHipsPos, lerp);
+            //Pomeranje desne ruke u napred dok se leva noga pomera
+            rightArmTarget.position = Vector3.Lerp(rightArmStartPosition, rightArmGoal, lerp);
+            leftArmTarget.position = Vector3.Lerp(leftArmStartPosition, leftArmGoal, lerp);
 
             Vector3 currentFoorPos = Vector3.Lerp(rightFootStartPosition, rightFootGoal, lerp);
             currentFoorPos.y += Mathf.Sin(lerp * Mathf.PI) * calculatedStepHeight;
@@ -112,6 +146,10 @@ public class WalkingScript : MonoBehaviour
                 laserPointerScript.leftFootTurn = !laserPointerScript.leftFootTurn;
                 rightFootStartPosition = currentFoorPos;
                 hipsStartPosition = hips.position;
+
+                rightArmStartPosition = rightArmTarget.position;
+                leftArmStartPosition = leftArmTarget.position;
+
                 lerp = 0f;
                 index++;
             }
@@ -149,8 +187,6 @@ public class WalkingScript : MonoBehaviour
         float finalDiff = 0f;
         float feetYDiff = goalPosition.y - oldPostion.y;
         float otherFeetYDiff = otherFootPostion.y - oldPostion.y;
-
-        Debug.Log("Diff " + feetYDiff + " Other: " + otherFeetYDiff);
 
         if(otherFeetYDiff > feetYDiff)
         {
