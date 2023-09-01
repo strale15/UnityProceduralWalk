@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/TestStyle.uss?fileID=7433441132597879392&amp;guid=ebe66477bf640df4db4ab1e3d578eadf&amp;type=3#TestStyle" />
+    <ui:Label tabindex="-1" text="Gas" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+</ui:UXML>
