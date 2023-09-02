@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-enum Mode {
+public enum Mode {
     StepGiver,
     MovePlayer
 }
@@ -24,7 +24,7 @@ public class LaserPointer : MonoBehaviour
     private bool leftFootDrawTurn = false;
 
     private RaycastHit hitInfo;
-    private Mode mode;
+    public Mode mode;
     private GameObject playerObject;
     private WalkingScript walkingScript;
     void Start()

@@ -613,7 +613,7 @@ MonoBehaviour:
   rightFootBase: {fileID: 55570926330218814}
   hipsBase: {fileID: 7711678522625353422}
   stepSpeed: 1.5
-  stepHeight: 0.1
+  stepHeight: 0.04
 --- !u!114 &1718232321433813424
 MonoBehaviour:
   m_ObjectHideFlags: 0

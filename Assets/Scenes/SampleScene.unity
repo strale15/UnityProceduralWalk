@@ -948,6 +948,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a52bc3137ea30bb4cb4b122362ac9ff3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1308233723 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8783996975356181186, guid: 4144be58d5864e2458d68d14784fafda, type: 3}
+  m_PrefabInstance: {fileID: 7658814931882524153}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6573569bdaaaf074f8a89e48ba5d4589, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1339195300
 GameObject:
   m_ObjectHideFlags: 0
@@ -1063,6 +1074,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1494615275}
   - component: {fileID: 1494615274}
+  - component: {fileID: 1494615276}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -1101,6 +1113,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1494615276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494615273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cb8984b8bde6d74faa730865354fd78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  laserPointerScript: {fileID: 1308233723}
 --- !u!1 &2050179621
 GameObject:
   m_ObjectHideFlags: 0
@@ -1340,6 +1365,7 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1494615275}
   - {fileID: 705507995}
   - {fileID: 830934133}
   - {fileID: 824577181}
@@ -1352,4 +1378,3 @@ SceneRoots:
   - {fileID: 7658814931882524153}
   - {fileID: 1339195304}
   - {fileID: 7076381109194244355}
-  - {fileID: 1494615275}

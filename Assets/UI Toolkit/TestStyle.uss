@@ -1,0 +1,15 @@
+.basic-label {
+    font-size: 25px;
+    align-items: flex-start;
+    align-self: flex-start;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+}
+
+.info-label {
+    width: 100%;
+    margin-right: 5px;
+    padding-right: 10px;
+}
