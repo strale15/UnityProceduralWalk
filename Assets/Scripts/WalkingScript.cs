@@ -41,6 +41,13 @@ public class WalkingScript : MonoBehaviour
     private Quaternion leftShoulderGoalRotation = new Quaternion();
     private Quaternion currentRightShoulderRotation = new Quaternion();
     private Quaternion currentLeftShoulderRotation = new Quaternion();
+    private Quaternion leftFootGoalRotation = new Quaternion();
+    private Quaternion rightFootGoalRotation = new Quaternion();
+    private Quaternion leftFootStartRot = new Quaternion();
+    private Quaternion rightFootStartRot = new Quaternion();
+
+    private Quaternion leftFootStartRotLerp = new Quaternion();
+    private Quaternion rightFootStartRotLerp = new Quaternion();
     private float handHipDistance = 0;
 
     private int index = 0;
@@ -71,6 +78,11 @@ public class WalkingScript : MonoBehaviour
 
         leftShoulderStartRotation = Quaternion.Euler(leftShoulder.localRotation.eulerAngles);
         rightShoulderStartRotation = Quaternion.Euler(rightShoulder.localRotation.eulerAngles);
+
+        leftFootStartRot = leftFoot.rotation;
+        rightFootStartRot = rightFoot.rotation;
+        leftFootStartRotLerp = leftFoot.rotation;
+        rightFootStartRotLerp = rightFoot.rotation;
     }
 
     void Update()
@@ -104,6 +116,12 @@ public class WalkingScript : MonoBehaviour
 
                 currentRightShoulderRotation = rightShoulder.localRotation;
                 currentLeftShoulderRotation = leftShoulder.localRotation;
+
+                //Racunanje goal rotacije za stopalo
+                leftFootGoalRotation = Quaternion.FromToRotation(Vector3.up, laserPointerScript.footAngleArray.First.Value) * leftFootStartRot;
+                laserPointerScript.footAngleArray.RemoveFirst();
+
+                leftFoot.rotation = leftFootGoalRotation;
             }
             rightFoot.position = rightFootStartPosition;
 
@@ -117,6 +135,9 @@ public class WalkingScript : MonoBehaviour
             //Slerp ramena
             leftShoulder.localRotation = Quaternion.Slerp(currentLeftShoulderRotation, leftShoulderGoalRotation, lerp);
             rightShoulder.localRotation = Quaternion.Slerp(currentRightShoulderRotation, rightShoulderGoalRotation, lerp);
+
+            //Slerp stopala
+            leftFoot.rotation = Quaternion.Slerp(leftFootStartRotLerp, leftFootGoalRotation, lerp);
 
             Vector3 currentFootPos = Vector3.Lerp(leftFootStartPosition, leftFootGoal, lerp);
             currentFootPos.y += Mathf.Sin(lerp * Mathf.PI) * calculatedStepHeight;
@@ -132,11 +153,9 @@ public class WalkingScript : MonoBehaviour
                 rightArmStartPosition = rightArmTarget.position;
                 leftArmStartPosition = leftArmTarget.position;
 
-                //rightShoulderStartRotation = rightShoulder.localRotation;
-                //leftShoulderStartRotation = leftShoulder.localRotation;
+                leftFootStartRotLerp = leftFoot.rotation;
 
                 lerp = 0f;
-                index++;
             }
 
         } else //Desna noga se pomera
@@ -161,6 +180,12 @@ public class WalkingScript : MonoBehaviour
 
                 currentRightShoulderRotation = rightShoulder.localRotation;
                 currentLeftShoulderRotation = leftShoulder.localRotation;
+
+                //Racunanje goal rotacije za stopalo
+                rightFootGoalRotation = Quaternion.FromToRotation(Vector3.up, laserPointerScript.footAngleArray.First.Value) * rightFootStartRot;
+                laserPointerScript.footAngleArray.RemoveFirst();
+
+                rightFoot.rotation = rightFootGoalRotation;
             }
 
             leftFoot.position = leftFootStartPosition;
@@ -176,6 +201,9 @@ public class WalkingScript : MonoBehaviour
             leftShoulder.localRotation = Quaternion.Slerp(currentLeftShoulderRotation, leftShoulderGoalRotation, lerp);
             rightShoulder.localRotation = Quaternion.Slerp(currentRightShoulderRotation, rightShoulderGoalRotation, lerp);
 
+            //Slerp stopala
+            rightFoot.rotation = Quaternion.Slerp(rightFootStartRotLerp, rightFootGoalRotation, lerp);
+
             Vector3 currentFoorPos = Vector3.Lerp(rightFootStartPosition, rightFootGoal, lerp);
             currentFoorPos.y += Mathf.Sin(lerp * Mathf.PI) * calculatedStepHeight;
             rightFoot.position = currentFoorPos;
@@ -190,11 +218,9 @@ public class WalkingScript : MonoBehaviour
                 rightArmStartPosition = rightArmTarget.position;
                 leftArmStartPosition = leftArmTarget.position;
 
-                //rightShoulderStartRotation = rightShoulder.localRotation;
-                //leftShoulderStartRotation = leftShoulder.localRotation;
+                rightFootStartRotLerp = rightFoot.rotation;
 
                 lerp = 0f;
-                index++;
             }
         }
 

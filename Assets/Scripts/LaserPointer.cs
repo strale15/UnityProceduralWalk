@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public enum Mode {
@@ -16,12 +17,13 @@ public class LaserPointer : MonoBehaviour
     public GameObject playerPrefab;
 
     public LinkedList<Vector3> goalsArray = new LinkedList<Vector3>();
+    public LinkedList<Vector3> footAngleArray = new LinkedList<Vector3>();
 
     private LinkedList<GameObject> feetMarkers = new LinkedList<GameObject>();
 
     public bool isPaused = true;
     public bool leftFootTurn = false;
-    private bool leftFootDrawTurn = false;
+    public bool leftFootDrawTurn = false;
 
     private RaycastHit hitInfo;
     public Mode mode;
@@ -46,21 +48,21 @@ public class LaserPointer : MonoBehaviour
                 if(Input.GetKeyDown(KeyCode.E))
                 {
                     Vector3 stepGoal = hitInfo.point;
-                    stepGoal.y += 0.1154f;
-                    stepGoal.z -= 0.1f;
+                    stepGoal += hitInfo.normal * 0.1154f;
 
                     //Dodaj u niz za hodanje
                     goalsArray.AddLast(stepGoal);
+                    footAngleArray.AddLast(hitInfo.normal);
 
                     //Nacrtaj stopu
                     if(leftFootDrawTurn)
                     {
-                        GameObject feetObj = Instantiate(feetMark1, hitInfo.point, Quaternion.Euler(90, 0, 0));
+                        GameObject feetObj = Instantiate(feetMark1, hitInfo.point, Quaternion.FromToRotation(Vector3.up, hitInfo.normal));
                         feetMarkers.AddLast(feetObj);
                         leftFootDrawTurn = false;
                     } else
                     {
-                        GameObject feetObj = Instantiate(feetMark2, hitInfo.point, Quaternion.Euler(90, 0, 0));
+                        GameObject feetObj = Instantiate(feetMark2, hitInfo.point, Quaternion.FromToRotation(Vector3.up, hitInfo.normal));
                         feetMarkers.AddLast(feetObj);
                         leftFootDrawTurn = true;
                     }
@@ -68,7 +70,8 @@ public class LaserPointer : MonoBehaviour
                 }
             
                 marker.position = hitInfo.point;
-                marker.localScale = new Vector3(0.124949999f, 0.124949999f, 0.124949999f);
+                marker.rotation = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
+                marker.localScale = new Vector3(1, 1, 1);
             }
 
             else if(mode == Mode.MovePlayer)
