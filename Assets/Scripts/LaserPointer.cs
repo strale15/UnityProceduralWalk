@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.Burst.CompilerServices;
+using UnityEditor.Sprites;
 using UnityEngine;
+using UnityEngine.Timeline;
 
 public enum Mode {
     StepGiver,
@@ -11,9 +13,10 @@ public enum Mode {
 public class LaserPointer : MonoBehaviour
 {
     public LayerMask mask;
-    public Transform marker;
-    public GameObject feetMark1;
-    public GameObject feetMark2;
+    public Transform leftMarker;
+    public Transform rightMarker;
+    public GameObject leftFootMarker;
+    public GameObject rightFootMarker;
     public GameObject playerPrefab;
 
     public LinkedList<Vector3> goalsArray = new LinkedList<Vector3>();
@@ -57,21 +60,32 @@ public class LaserPointer : MonoBehaviour
                     //Nacrtaj stopu
                     if(leftFootDrawTurn)
                     {
-                        GameObject feetObj = Instantiate(feetMark1, hitInfo.point, Quaternion.FromToRotation(Vector3.up, hitInfo.normal));
+                        GameObject feetObj = Instantiate(leftFootMarker, hitInfo.point, Quaternion.FromToRotation(Vector3.up, hitInfo.normal));
                         feetMarkers.AddLast(feetObj);
                         leftFootDrawTurn = false;
                     } else
                     {
-                        GameObject feetObj = Instantiate(feetMark2, hitInfo.point, Quaternion.FromToRotation(Vector3.up, hitInfo.normal));
+                        GameObject feetObj = Instantiate(rightFootMarker, hitInfo.point, Quaternion.FromToRotation(Vector3.up, hitInfo.normal));
                         feetMarkers.AddLast(feetObj);
                         leftFootDrawTurn = true;
                     }
 
                 }
+
+                if(leftFootDrawTurn)
+                {
+                    leftMarker.position = hitInfo.point;
+                    leftMarker.rotation = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
+                    leftMarker.localScale = new Vector3(1, 1, 1);
+                }
+                else
+                {
+                    rightMarker.position = hitInfo.point;
+                    rightMarker.rotation = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
+                    rightMarker.localScale = new Vector3(1, 1, 1);
+                }
             
-                marker.position = hitInfo.point;
-                marker.rotation = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
-                marker.localScale = new Vector3(1, 1, 1);
+                
             }
 
             else if(mode == Mode.MovePlayer)
@@ -91,7 +105,8 @@ public class LaserPointer : MonoBehaviour
             
         } else
         {
-            marker.localScale = new Vector3(0, 0, 0);
+            leftMarker.localScale = new Vector3(0, 0, 0);
+            rightMarker.localScale = new Vector3(0, 0, 0);
         }
 
         if(Input.GetKeyDown(KeyCode.P))
@@ -113,7 +128,8 @@ public class LaserPointer : MonoBehaviour
                 playerObject = Instantiate(playerPrefab, new Vector3(), Quaternion.identity);
                 walkingScript = GameObject.FindObjectOfType<WalkingScript>();
 
-                marker.localScale = new Vector3(0, 0, 0);
+                leftMarker.localScale = new Vector3(0, 0, 0);
+                rightMarker.localScale = new Vector3(0, 0, 0);
 
                 mode = Mode.MovePlayer;
             }
@@ -144,5 +160,11 @@ public class LaserPointer : MonoBehaviour
         leftFootTurn = false;
         leftFootDrawTurn = false;
         
+    }
+
+    public void FinishStep()
+    {
+        Destroy(feetMarkers.First.Value);
+        feetMarkers.RemoveFirst();
     }
 }

@@ -600,6 +600,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd77d739922454348981bd42972ce51d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HipsCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  FeetCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   leftFoot: {fileID: 3006766398689464859}
   rightFoot: {fileID: 6595918734353153988}
   hips: {fileID: 2066216001710978823}
@@ -612,8 +660,8 @@ MonoBehaviour:
   leftFootBase: {fileID: 6502869056678250403}
   rightFootBase: {fileID: 55570926330218814}
   hipsBase: {fileID: 7711678522625353422}
-  stepSpeed: 1.5
-  stepHeight: 0.04
+  stepSpeed: 1.8
+  stepHeight: 0.05
 --- !u!114 &1718232321433813424
 MonoBehaviour:
   m_ObjectHideFlags: 0
