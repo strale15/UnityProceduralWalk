@@ -11,6 +11,8 @@ public class WalkingScript : MonoBehaviour
     public Transform rightFoot;
     public Transform hips;
 
+    public Transform lumbarSpine;
+
     public Transform leftArmTarget;
     public Transform rightArmTarget;
     public Transform leftZbica;
@@ -48,6 +50,9 @@ public class WalkingScript : MonoBehaviour
     private Quaternion rightFootGoalRotation = new Quaternion();
     private Quaternion leftFootStartRot = new Quaternion();
     private Quaternion rightFootStartRot = new Quaternion();
+    private Vector3 lumbarSpineDefaultRot = new Vector3();
+    private Quaternion lumbarSpineGoalRot = new Quaternion();
+    private Quaternion lumbarSpineCurrentRot = new Quaternion();
 
     private Quaternion leftFootStartRotLerp = new Quaternion();
     private Quaternion rightFootStartRotLerp = new Quaternion();
@@ -81,6 +86,9 @@ public class WalkingScript : MonoBehaviour
 
         leftShoulderStartRotation = Quaternion.Euler(leftShoulder.localRotation.eulerAngles);
         rightShoulderStartRotation = Quaternion.Euler(rightShoulder.localRotation.eulerAngles);
+
+        lumbarSpineDefaultRot = lumbarSpine.eulerAngles;
+        lumbarSpineCurrentRot = lumbarSpine.rotation;
 
         leftFootStartRot = leftFoot.rotation;
         rightFootStartRot = rightFoot.rotation;
@@ -125,6 +133,9 @@ public class WalkingScript : MonoBehaviour
                 laserPointerScript.footAngleArray.RemoveFirst();
 
                 leftFoot.rotation = leftFootGoalRotation;
+
+                //Racunanje za kicmu
+                CalculateSpineRotation(leftFootGoal, rightFootStartPosition, true);
             }
             rightFoot.position = rightFootStartPosition;
 
@@ -144,6 +155,10 @@ public class WalkingScript : MonoBehaviour
             //Slerp stopala
             leftFoot.rotation = Quaternion.Slerp(leftFootStartRotLerp, leftFootGoalRotation, lerp);
 
+            //Slerp kicme
+            lumbarSpine.rotation = Quaternion.Slerp(lumbarSpineCurrentRot, lumbarSpineGoalRot, lerp);
+
+            //Lerp noge
             Vector3 currentFootPos = Vector3.Lerp(leftFootStartPosition, leftFootGoal, FeetCurve.Evaluate(lerp));
             currentFootPos.y += Mathf.Sin(FeetCurve.Evaluate(lerp) * Mathf.PI) * calculatedStepHeight;
             leftFoot.position = currentFootPos;
@@ -159,6 +174,8 @@ public class WalkingScript : MonoBehaviour
                 leftArmStartPosition = leftArmTarget.position;
 
                 leftFootStartRotLerp = leftFoot.rotation;
+
+                lumbarSpineCurrentRot = lumbarSpine.rotation;
 
                 laserPointerScript.FinishStep();
 
@@ -193,6 +210,9 @@ public class WalkingScript : MonoBehaviour
                 laserPointerScript.footAngleArray.RemoveFirst();
 
                 rightFoot.rotation = rightFootGoalRotation;
+
+                //Racunanje za kicmu
+                CalculateSpineRotation(rightFootGoal, leftFootStartPosition, false);
             }
 
             leftFoot.position = leftFootStartPosition;
@@ -213,6 +233,10 @@ public class WalkingScript : MonoBehaviour
             //Slerp stopala
             rightFoot.rotation = Quaternion.Slerp(rightFootStartRotLerp, rightFootGoalRotation, lerp);
 
+            //Slerp kicme
+            lumbarSpine.rotation = Quaternion.Slerp(lumbarSpineCurrentRot, lumbarSpineGoalRot, lerp);
+
+            //Lerp noge
             Vector3 currentFoorPos = Vector3.Lerp(rightFootStartPosition, rightFootGoal, FeetCurve.Evaluate(lerp));
             currentFoorPos.y += Mathf.Sin(FeetCurve.Evaluate(lerp) * Mathf.PI) * calculatedStepHeight;
             rightFoot.position = currentFoorPos;
@@ -229,33 +253,55 @@ public class WalkingScript : MonoBehaviour
 
                 rightFootStartRotLerp = rightFoot.rotation;
 
+                lumbarSpineCurrentRot = lumbarSpine.rotation;
+
                 laserPointerScript.FinishStep();
 
                 lerp = 0f;
             }
         }
-
     }
 
-    private Vector3 CalculateHipsPosition(Vector3 leftFootPosition, Vector3 rightFootPoition)
+    private void CalculateSpineRotation(Vector3 stepGoal, Vector3 currentStep, bool isLeftLeg)
+    {
+        float zRotation = 12f;
+
+        if (isLeftLeg)
+        {
+            zRotation *= -1f;
+        }
+
+        if ((stepGoal.y - currentStep.y) < 0)
+        {
+            zRotation = 0f;
+        }
+
+        zRotation *= (stepGoal.y - currentStep.y) / 0.6f;
+
+        lumbarSpineGoalRot = Quaternion.Euler(lumbarSpineDefaultRot.x, lumbarSpineDefaultRot.y, lumbarSpineDefaultRot.z + zRotation);
+
+        //Debug.Log(stepGoal.y + " Current " + currentStep.y + " ?:" + lumbarSpineDefaultRot.x);
+    }
+
+    private Vector3 CalculateHipsPosition(Vector3 leftFootPosition, Vector3 rightFootPosition)
     {
         float feetY = 0f;
-        if(leftFootPosition.y < rightFootPoition.y)
+        if(leftFootPosition.y < rightFootPosition.y)
         {
-            rightFootPoition.y = leftFootPosition.y;
+            rightFootPosition.y = leftFootPosition.y;
             feetY = leftFootPosition.y;
         } else
         {
-            leftFootPosition.y = rightFootPoition.y;
-            feetY = rightFootPoition.y;
+            leftFootPosition.y = rightFootPosition.y;
+            feetY = rightFootPosition.y;
         }
 
-        float feetDist = Vector3.Distance(rightFootPoition, leftFootPosition)/2;
+        float feetDist = Vector3.Distance(rightFootPosition, leftFootPosition)/2;
         float hipHeight = legLength * legLength - feetDist * feetDist;
 
         //Debug.Log("Feet dist: " + feetDist + " LegLength: " + legLength + " HipHeight: " + hipHeight + "FeetY: " + feetY);
 
-        Vector3 feetMiddlepoint = Vector3.Lerp(leftFootPosition, rightFootPoition, 0.5f); 
+        Vector3 feetMiddlepoint = Vector3.Lerp(leftFootPosition, rightFootPosition, 0.5f); 
 
         return new Vector3(feetMiddlepoint.x, hipHeight - modellegHeight + (feetY - 0.1154f), feetMiddlepoint.z);
         

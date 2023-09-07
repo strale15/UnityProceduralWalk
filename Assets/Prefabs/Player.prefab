@@ -651,6 +651,7 @@ MonoBehaviour:
   leftFoot: {fileID: 3006766398689464859}
   rightFoot: {fileID: 6595918734353153988}
   hips: {fileID: 2066216001710978823}
+  lumbarSpine: {fileID: 8523185833527778959}
   leftArmTarget: {fileID: 2216516032924075646}
   rightArmTarget: {fileID: 6449534188850626435}
   leftZbica: {fileID: 8712554126773647398}
