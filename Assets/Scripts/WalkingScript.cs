@@ -37,13 +37,12 @@ public class WalkingScript : MonoBehaviour
     private float legLength;
     private const float modellegHeight = 0.7160985f;
     private float lerp = 0;
-    private bool peakHit = false;
     private Vector3 leftFootGoal = new Vector3();
     private Vector3 rightFootGoal = new Vector3();
     private Vector3 calculatedHipsPos = new Vector3();
     private Vector3 leftArmGoal = new Vector3();
     private Vector3 rightArmGoal = new Vector3();
-    private Vector3 projectedGoal = new Vector3();
+    private Vector3 coef = new Vector3();
     private Quaternion rightShoulderGoalRotation = new Quaternion();
     private Quaternion leftShoulderGoalRotation = new Quaternion();
     private Quaternion currentRightShoulderRotation = new Quaternion();
@@ -115,6 +114,8 @@ public class WalkingScript : MonoBehaviour
                 calculatedHipsPos = CalculateHipsPosition(leftFootGoal, rightFootStartPosition);
                 calculatedStepHeight = CalculateStepHeight(leftFootGoal, leftFootStartPosition, rightFootStartPosition);
 
+                coef = FitCurve(leftFootStartPosition, leftFootGoal);
+
                 //Racunanje goal-a za ruke
                 rightArmGoal = new Vector3(calculatedHipsPos.x + handHipDistance, calculatedHipsPos.y + 1f, calculatedHipsPos.z + 0.1f);
                 leftArmGoal = new Vector3(calculatedHipsPos.x - handHipDistance, calculatedHipsPos.y + 1f , calculatedHipsPos.z - 0.07f);
@@ -161,10 +162,7 @@ public class WalkingScript : MonoBehaviour
 
             //Lerp noge
             Vector3 currentFootPos = Vector3.Lerp(leftFootStartPosition, leftFootGoal, FeetCurve.Evaluate(lerp));
-            Vector3 currentFootPosProjected = Vector3.Lerp(leftFootStartPosition,
-                new Vector3(leftFootGoal.x, leftFootStartPosition.y, leftFootGoal.z), FeetCurve.Evaluate(lerp));
-            currentFootPosProjected.y += Mathf.Sin(FeetCurve.Evaluate(lerp) * Mathf.PI) * calculatedStepHeight;
-            currentFootPos.y = currentFootPosProjected.y;
+            currentFootPos.y = Quadratic(coef, FeetCurve.Evaluate(lerp));
             leftFoot.position = currentFootPos;
 
 
@@ -194,6 +192,9 @@ public class WalkingScript : MonoBehaviour
                 laserPointerScript.goalsArray.RemoveFirst();
                 calculatedHipsPos = CalculateHipsPosition(rightFootGoal, leftFootStartPosition);
                 calculatedStepHeight = CalculateStepHeight(rightFootGoal, rightFootStartPosition, leftFootStartPosition);
+
+                coef = FitCurve(rightFootStartPosition, rightFootGoal);
+                //Debug.Log("StarH: " + rightFootStartPosition.y + " EndH: " + rightFootGoal.y + " coef: " + coef + " CalculatedH: " + calculatedStepHeight);
 
                 //Racunanje goal-a za ruke
                 leftArmGoal = new Vector3(calculatedHipsPos.x - handHipDistance, calculatedHipsPos.y + 1f, calculatedHipsPos.z + 0.1f);
@@ -242,19 +243,7 @@ public class WalkingScript : MonoBehaviour
 
             //Lerp noge
             Vector3 currentFootPos = Vector3.Lerp(rightFootStartPosition, rightFootGoal, FeetCurve.Evaluate(lerp));
-
-            Vector3 currentFootPosProjected = Vector3.Lerp(rightFootStartPosition, projectedGoal, FeetCurve.Evaluate(lerp));
-
-            currentFootPosProjected.y = rightFootStartPosition.y + Mathf.Sin(FeetCurve.Evaluate(lerp) * Mathf.PI) * calculatedStepHeight;
-            if(currentFootPosProjected.y > rightFootGoal.y)
-            {
-                peakHit = true;
-            }
-            if(peakHit )
-            {
-                currentFootPosProjected.y = Mathf.Max(currentFootPosProjected.y, rightFootGoal.y);
-            }
-            currentFootPos.y = currentFootPosProjected.y;
+            currentFootPos.y = Quadratic(coef, FeetCurve.Evaluate(lerp));
             rightFoot.position = currentFootPos;
 
 
@@ -273,19 +262,9 @@ public class WalkingScript : MonoBehaviour
 
                 laserPointerScript.FinishStep();
 
-                peakHit = false;
                 lerp = 0f;
             }
         }
-    }
-
-    private Vector3 CalculateOpaljeniPoint(Vector3 knownPoint, float y)
-    {
-        float B = Mathf.Asin((knownPoint.y - y) / calculatedStepHeight) / knownPoint.z;
-        Debug.Log("B: " + B + " boles " + -y / calculatedStepHeight);
-        float calculatedZ = (1 / B)*Mathf.Asin(-y / calculatedStepHeight);
-
-        return new Vector3(knownPoint.x, y, calculatedZ);
     }
 
     private void CalculateSpineRotation(Vector3 stepGoal, Vector3 currentStep, bool isLeftLeg)
@@ -335,33 +314,33 @@ public class WalkingScript : MonoBehaviour
     
     private float CalculateStepHeight(Vector3 goalPosition, Vector3 oldPostion, Vector3 otherFootPostion)
     {
-        float correction = 0.2f;
-        float finalDiff = 0f;
-        float feetYDiff = goalPosition.y - oldPostion.y;
-        float otherFeetYDiff = otherFootPostion.y - oldPostion.y;
-        otherFeetYDiff = 0f; //OVO JE TEMP
+        //float diff = Mathf.Abs(goalPosition.y - oldPostion.y);
+        float h = Mathf.Max(goalPosition.y, oldPostion.y) + stepHeight;
+        return h;
+    }
 
-        if(otherFeetYDiff > feetYDiff)
-        {
-            finalDiff = otherFeetYDiff + correction/2.2f;
-        } else
-        {
-            finalDiff = feetYDiff;
-        }
+    private float Quadratic(Vector3 coef, float x)
+    {
+        return (coef.x * x * x) + (coef.y * x) + coef.z;
+    }
 
-        if(finalDiff < 0f)
-        {
-            finalDiff = 0.1f;
-        }
+    private Vector3 FitCurve(Vector3 startPosition, Vector3 goalPosition)
+    {
+        float y1 = startPosition.y;
+        float y2 = calculatedStepHeight;
+        float y3 = goalPosition.y;
 
+        float c = y1;
+        float a = -4 * y2 + 2 * y3 + 2 * c;
+        float b = y3 - c - a;
 
-        //Scale step height with distance
-        Vector3 goalProjected = new Vector3(goalPosition.x, 0, goalPosition.z);
-        Vector3 oldProjected = new Vector3(oldPostion.x, 0, oldPostion.z);
+        return new Vector3(a, b, c);
+    }
 
-        float distanceProjected = Vector3.Distance(oldProjected, goalProjected);
-        float height = (stepHeight * distanceProjected * 1.5f) + finalDiff;
-        //Debug.Log(height + " finalDiff: " + finalDiff + " base: " + stepHeight * distanceProjected * 1.5f);
-        return height;
+    private float Distance2D(Vector3 point)
+    {
+        Vector3 point2D = new Vector3(point.x, 0, point.z);
+
+        return Vector3.Distance(point2D, new Vector3());
     }
 }

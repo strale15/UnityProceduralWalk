@@ -662,8 +662,8 @@ MonoBehaviour:
   leftFootBase: {fileID: 6502869056678250403}
   rightFootBase: {fileID: 55570926330218814}
   hipsBase: {fileID: 7711678522625353422}
-  stepSpeed: 0.2
-  stepHeight: 0.05
+  stepSpeed: 1.8
+  stepHeight: 0.11
   shoulderAngle: 20
 --- !u!114 &1718232321433813424
 MonoBehaviour:
