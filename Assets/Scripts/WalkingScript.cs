@@ -63,6 +63,7 @@ public class WalkingScript : MonoBehaviour
     public float stepHeight = 0.2f;
     private float calculatedStepHeight = 0f;
     public float shoulderAngle = 13f;
+    public float handOffset = 0.8f;
 
     
     void Start()
@@ -117,8 +118,8 @@ public class WalkingScript : MonoBehaviour
                 coef = FitCurve(leftFootStartPosition, leftFootGoal);
 
                 //Racunanje goal-a za ruke
-                rightArmGoal = new Vector3(calculatedHipsPos.x + handHipDistance, calculatedHipsPos.y + 1f, calculatedHipsPos.z + 0.1f);
-                leftArmGoal = new Vector3(calculatedHipsPos.x - handHipDistance, calculatedHipsPos.y + 1f , calculatedHipsPos.z - 0.07f);
+                rightArmGoal = new Vector3(calculatedHipsPos.x + handHipDistance, calculatedHipsPos.y + handOffset, calculatedHipsPos.z + 0.1f);
+                leftArmGoal = new Vector3(calculatedHipsPos.x - handHipDistance, calculatedHipsPos.y + handOffset , calculatedHipsPos.z - 0.07f);
 
                 //Pomeranje ramena
                 rightShoulderGoalRotation = Quaternion.Euler(
@@ -197,8 +198,8 @@ public class WalkingScript : MonoBehaviour
                 //Debug.Log("StarH: " + rightFootStartPosition.y + " EndH: " + rightFootGoal.y + " coef: " + coef + " CalculatedH: " + calculatedStepHeight);
 
                 //Racunanje goal-a za ruke
-                leftArmGoal = new Vector3(calculatedHipsPos.x - handHipDistance, calculatedHipsPos.y + 1f, calculatedHipsPos.z + 0.1f);
-                rightArmGoal = new Vector3(calculatedHipsPos.x + handHipDistance,calculatedHipsPos.y + 1f, calculatedHipsPos.z - 0.07f);
+                leftArmGoal = new Vector3(calculatedHipsPos.x - handHipDistance, calculatedHipsPos.y + handOffset, calculatedHipsPos.z + 0.1f);
+                rightArmGoal = new Vector3(calculatedHipsPos.x + handHipDistance,calculatedHipsPos.y + handOffset, calculatedHipsPos.z - 0.07f);
 
                 //Pomeranje ramena
                 rightShoulderGoalRotation = Quaternion.Euler(
@@ -246,7 +247,6 @@ public class WalkingScript : MonoBehaviour
             currentFootPos.y = Quadratic(coef, FeetCurve.Evaluate(lerp));
             rightFoot.position = currentFootPos;
 
-
             if (lerp > 1f) 
             {
                 laserPointerScript.leftFootTurn = !laserPointerScript.leftFootTurn;
@@ -269,7 +269,7 @@ public class WalkingScript : MonoBehaviour
 
     private void CalculateSpineRotation(Vector3 stepGoal, Vector3 currentStep, bool isLeftLeg)
     {
-        float yRotation = 15f;
+        float yRotation = 10f;
 
         if (isLeftLeg)
         {
