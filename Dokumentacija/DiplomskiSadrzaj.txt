@@ -1,19 +1,24 @@
 Diplomski:
 
+Primena inverzne kinematike u kreiranju animacije kretanja 3D modela
+
 1 Uvod - zasto je ovo namesteno u principu
-2 Inverzna kinematika - sta je itd, moze da obj i forward
-3 Proceduralna animacija
-4 Tehnologije
-	4.1 Unity
-	4.2 C# - (u unity-u)
-	4.3 Animation Rigging
-5 Implementacija
-	5.0 Definisanje koraka
-	5.1 Kretanje nogu
-	5.2 Kretanje ruku
-	5.3 Rotacija stopala
-	5.5 Rotacija ramena
-	5.5 Rotacija torzoa
-6 Primer
-7 Ogranicenja i unapredjenja
-8 Zakljucak
+2 3D Model i Rig
+3 Animacija
+	3.1 Obicna
+	3.2 Proceduralna
+4 Inverzna kinematika - sta je itd, moze da obj i forward
+5 Tehnologije
+	5.1 Unity
+	5.2 C# - (u unity-u)
+	5.3 Animation Rigging
+6 Implementacija
+	6.0 Definisanje koraka
+	6.1 Kretanje nogu
+	6.2 Kretanje ruku
+	6.3 Rotacija stopala
+	6.4 Rotacija ramena
+	6.5 Rotacija torzoa
+7 Primer
+8 Ogranicenja i unapredjenja
+9 Zakljucak
