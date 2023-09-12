@@ -109,7 +109,7 @@ public class LaserPointer : MonoBehaviour
             rightMarker.localScale = new Vector3(0, 0, 0);
         }
 
-        if(Input.GetKeyDown(KeyCode.P))
+        if(Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.R))
         {
             isPaused = !isPaused;
         }
@@ -121,6 +121,7 @@ public class LaserPointer : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.M))
         {
+            isPaused = true;
             if(mode != Mode.MovePlayer)
             {
                 ClearSteps();
