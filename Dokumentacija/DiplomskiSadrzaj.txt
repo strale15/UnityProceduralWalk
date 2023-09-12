@@ -1,0 +1,19 @@
+Diplomski:
+
+1 Uvod - zasto je ovo namesteno u principu
+2 Inverzna kinematika - sta je itd, moze da obj i forward
+3 Proceduralna animacija
+4 Tehnologije
+	4.1 Unity
+	4.2 C# - (u unity-u)
+	4.3 Animation Rigging
+5 Implementacija
+	5.0 Definisanje koraka
+	5.1 Kretanje nogu
+	5.2 Kretanje ruku
+	5.3 Rotacija stopala
+	5.5 Rotacija ramena
+	5.5 Rotacija torzoa
+6 Primer
+7 Ogranicenja i unapredjenja
+8 Zakljucak
