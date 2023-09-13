@@ -4,6 +4,9 @@ Primena inverzne kinematike u kreiranju animacije kretanja 3D modela
 
 1 Uvod - zasto je ovo namesteno u principu
 2 3D Model i Rig
+	Uopsteno sta je
+	2.1 Skeleton
+	2.2 Animiranje
 3 Animacija
 	3.1 Obicna
 	3.2 Proceduralna
