@@ -16,10 +16,8 @@ public class StepGiver : MonoBehaviour
         Cursor.visible = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //Camera look
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
         float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
         
@@ -29,6 +27,5 @@ public class StepGiver : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         playerBody.rotation = Quaternion.Euler(0, yRotation, 0);
-        //playerBody.Rotate(Vector3.up * mouseX);
     }
 }

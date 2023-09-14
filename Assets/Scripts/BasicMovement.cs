@@ -10,7 +10,6 @@ public class BasicMovement : MonoBehaviour
 
     void Update()
     {
-        //Camera move
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
 
