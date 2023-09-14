@@ -145,72 +145,20 @@ public class WalkingScript : MonoBehaviour
         {
             if(lerp == 0f)
             {
-                leftFootGoal = laserPointerScript.goalsArray.First.Value;
-                laserPointerScript.goalsArray.RemoveFirst();
-                calculatedHipsPos = CalculateHipsPosition(leftFootGoal, rightFootStartPosition);
-                calculatedStepHeight = CalculateStepHeight(leftFootGoal, leftFootStartPosition, rightFootStartPosition);
-
-                coef = FitCurve(leftFootStartPosition, leftFootGoal);
-
-                //Racunanje goal-a za ruke
-                rightArmGoal = new Vector3(calculatedHipsPos.x + handHipDistance, calculatedHipsPos.y + handOffsetForward, calculatedHipsPos.z + 0.1f);
-                leftArmGoal = new Vector3(calculatedHipsPos.x - handHipDistance, calculatedHipsPos.y + handOffsetBack , calculatedHipsPos.z - 0.07f);
-
-                //Pomeranje ramena
-                rightShoulderGoalRotation = Quaternion.Euler(
-                    rightShoulderStartRotation.eulerAngles.x, rightShoulderStartRotation.eulerAngles.y, rightShoulderStartRotation.eulerAngles.z + shoulderAngle);
-
-                leftShoulderGoalRotation = Quaternion.Euler(
-                    leftShoulderStartRotation.eulerAngles.x, leftShoulderStartRotation.eulerAngles.y, leftShoulderStartRotation.eulerAngles.z + shoulderAngle);
-
-                currentRightShoulderRotation = rightShoulder.localRotation;
-                currentLeftShoulderRotation = leftShoulder.localRotation;
-
-                //Racunanje goal rotacije za stopalo
-                leftFootGoalRotation = Quaternion.FromToRotation(Vector3.up, laserPointerScript.footAngleArray.First.Value) * leftFootStartRot;
-                laserPointerScript.footAngleArray.RemoveFirst();
-
-                leftFoot.rotation = leftFootGoalRotation;
-
-                //Racunanje za kicmu
-                CalculateSpineRotation(leftFootGoal, leftFootStartPosition, rightFootStartPosition, true);
+                CalculateLeftSideGoals();
             }
+
             rightFoot.position = rightFootStartPosition;
 
             lerp += stepSpeed * Time.deltaTime;
 
-            //Hips lerp
-            hips.position = Vector3.Lerp(hipsStartPosition, calculatedHipsPos, HipsCurve.Evaluate(lerp));
-
-            //Pomeranje desne ruke u napred dok se leva noga pomera
-            rightArmTarget.position = Vector3.Lerp(rightArmStartPosition, rightArmGoal, lerp);
-            leftArmTarget.position = Vector3.Lerp(leftArmStartPosition, leftArmGoal, lerp);
-
-            //Slerp ramena
-            leftShoulder.localRotation = Quaternion.Slerp(currentLeftShoulderRotation, leftShoulderGoalRotation, lerp);
-            rightShoulder.localRotation = Quaternion.Slerp(currentRightShoulderRotation, rightShoulderGoalRotation, lerp);
-
-            //Slerp stopala
-            leftFoot.rotation = Quaternion.Slerp(leftFootStartRotLerp, leftFootGoalRotation, lerp);
-
-            //Slerp kicme
-            lowerSpine.rotation = Quaternion.Slerp(lowerSpineCurrentRot, lowerSpineGoalRot, lerp);
-            middleSpine.rotation = Quaternion.Slerp(middleSpineCurrentRot, middleSpineGoalRot, lerp);
-
-            Vector3 rot = upperSpine.eulerAngles;
-            upperSpine.rotation = Quaternion.Slerp(upperSpineCurrentRot, upperSpineGoalRot, lerp);
-            upperSpine.rotation = Quaternion.Euler(rot.x, upperSpine.eulerAngles.y, rot.z);
-
-            //Lerp noge
-            Vector3 currentFootPos = Vector3.Lerp(leftFootStartPosition, leftFootGoal, FeetCurve.Evaluate(lerp));
-            currentFootPos.y = Quadratic(coef, FeetCurve.Evaluate(lerp));
-            leftFoot.position = currentFootPos;
+            DoLeftSideLerp();
 
 
             if (lerp > 1f) 
             {
                 laserPointerScript.leftFootTurn = !laserPointerScript.leftFootTurn;
-                leftFootStartPosition = currentFootPos;
+                leftFootStartPosition = leftFoot.position;
                 hipsStartPosition = hips.position;
 
                 rightArmStartPosition = rightArmTarget.position;
@@ -231,73 +179,19 @@ public class WalkingScript : MonoBehaviour
         {
             if(lerp == 0f)
             {
-                rightFootGoal = laserPointerScript.goalsArray.First.Value;
-                laserPointerScript.goalsArray.RemoveFirst();
-                calculatedHipsPos = CalculateHipsPosition(rightFootGoal, leftFootStartPosition);
-                calculatedStepHeight = CalculateStepHeight(rightFootGoal, rightFootStartPosition, leftFootStartPosition);
-
-                coef = FitCurve(rightFootStartPosition, rightFootGoal);
-                //Debug.Log("StarH: " + rightFootStartPosition.y + " EndH: " + rightFootGoal.y + " coef: " + coef + " CalculatedH: " + calculatedStepHeight);
-
-                //Racunanje goal-a za ruke
-                leftArmGoal = new Vector3(calculatedHipsPos.x - handHipDistance, calculatedHipsPos.y + handOffsetForward, calculatedHipsPos.z + 0.1f);
-                rightArmGoal = new Vector3(calculatedHipsPos.x + handHipDistance,calculatedHipsPos.y + handOffsetBack, calculatedHipsPos.z - 0.07f);
-
-                //Pomeranje ramena
-                rightShoulderGoalRotation = Quaternion.Euler(
-                    rightShoulderStartRotation.eulerAngles.x, rightShoulderStartRotation.eulerAngles.y, rightShoulderStartRotation.eulerAngles.z - shoulderAngle);
-
-                leftShoulderGoalRotation = Quaternion.Euler(
-                    leftShoulderStartRotation.eulerAngles.x, leftShoulderStartRotation.eulerAngles.y, leftShoulderStartRotation.eulerAngles.z - shoulderAngle);
-
-                currentRightShoulderRotation = rightShoulder.localRotation;
-                currentLeftShoulderRotation = leftShoulder.localRotation;
-
-                //Racunanje goal rotacije za stopalo
-                rightFootGoalRotation = Quaternion.FromToRotation(Vector3.up, laserPointerScript.footAngleArray.First.Value) * rightFootStartRot;
-                laserPointerScript.footAngleArray.RemoveFirst();
-
-                rightFoot.rotation = rightFootGoalRotation;
-
-                //Racunanje za kicmu
-                CalculateSpineRotation(rightFootGoal, rightFootStartPosition, leftFootStartPosition, false);
+                CalculateRightSideGoals();
             }
 
             leftFoot.position = leftFootStartPosition;
 
             lerp += stepSpeed * Time.deltaTime;
 
-            //Hips lerp
-            hips.position = Vector3.Lerp(hipsStartPosition, calculatedHipsPos, HipsCurve.Evaluate(lerp));
-
-            //Pomeranje desne ruke u napred dok se leva noga pomera
-            rightArmTarget.position = Vector3.Lerp(rightArmStartPosition, rightArmGoal, lerp);
-            leftArmTarget.position = Vector3.Lerp(leftArmStartPosition, leftArmGoal, lerp);
-
-            //Slerp ramena
-            leftShoulder.localRotation = Quaternion.Slerp(currentLeftShoulderRotation, leftShoulderGoalRotation, lerp);
-            rightShoulder.localRotation = Quaternion.Slerp(currentRightShoulderRotation, rightShoulderGoalRotation, lerp);
-
-            //Slerp stopala
-            rightFoot.rotation = Quaternion.Slerp(rightFootStartRotLerp, rightFootGoalRotation, lerp);
-
-            //Slerp kicme
-            lowerSpine.rotation = Quaternion.Slerp(lowerSpineCurrentRot, lowerSpineGoalRot, lerp);
-            middleSpine.rotation = Quaternion.Slerp(middleSpineCurrentRot, middleSpineGoalRot, lerp);
-
-            Vector3 rot = upperSpine.eulerAngles;
-            upperSpine.rotation = Quaternion.Slerp(upperSpineCurrentRot, upperSpineGoalRot, lerp);
-            upperSpine.rotation = Quaternion.Euler(rot.x, upperSpine.eulerAngles.y, rot.z);
-
-            //Lerp noge
-            Vector3 currentFootPos = Vector3.Lerp(rightFootStartPosition, rightFootGoal, FeetCurve.Evaluate(lerp));
-            currentFootPos.y = Quadratic(coef, FeetCurve.Evaluate(lerp));
-            rightFoot.position = currentFootPos;
+            DoRightSideLerp();
 
             if (lerp > 1f) 
             {
                 laserPointerScript.leftFootTurn = !laserPointerScript.leftFootTurn;
-                rightFootStartPosition = currentFootPos;
+                rightFootStartPosition = rightFoot.position;
                 hipsStartPosition = hips.position;
 
                 rightArmStartPosition = rightArmTarget.position;
@@ -316,31 +210,188 @@ public class WalkingScript : MonoBehaviour
         }
     }
 
+    private void CalculateLeftSideGoals()
+    {
+        leftFootGoal = laserPointerScript.goalsArray.First.Value;
+        laserPointerScript.goalsArray.RemoveFirst();
+        calculatedHipsPos = 
+            CalculateHipsPosition(leftFootGoal, rightFootStartPosition);
+        calculatedStepHeight = 
+            CalculateStepHeight(leftFootGoal, leftFootStartPosition, rightFootStartPosition);
+
+        coef = FitCurve(leftFootStartPosition, leftFootGoal);
+
+        //Racunanje goal-a za ruke
+        rightArmGoal = new Vector3(
+            calculatedHipsPos.x + handHipDistance,
+            calculatedHipsPos.y + handOffsetForward,
+            calculatedHipsPos.z + 0.1f);
+
+        leftArmGoal = new Vector3(
+            calculatedHipsPos.x - handHipDistance,
+            calculatedHipsPos.y + handOffsetBack,
+            calculatedHipsPos.z - 0.07f);
+
+        //Pomeranje ramena
+        rightShoulderGoalRotation = Quaternion.Euler(
+            rightShoulderStartRotation.eulerAngles.x,
+            rightShoulderStartRotation.eulerAngles.y,
+            rightShoulderStartRotation.eulerAngles.z + shoulderAngle);
+
+        leftShoulderGoalRotation = Quaternion.Euler(
+            leftShoulderStartRotation.eulerAngles.x,
+            leftShoulderStartRotation.eulerAngles.y, 
+            leftShoulderStartRotation.eulerAngles.z + shoulderAngle);
+
+        currentRightShoulderRotation = rightShoulder.localRotation;
+        currentLeftShoulderRotation = leftShoulder.localRotation;
+
+        //Racunanje goal rotacije za stopalo
+        leftFootGoalRotation = Quaternion.FromToRotation(
+            Vector3.up, 
+            laserPointerScript.footAngleArray.First.Value) * leftFootStartRot;
+
+        laserPointerScript.footAngleArray.RemoveFirst();
+
+        leftFoot.rotation = leftFootGoalRotation;
+
+        //Racunanje za kicmu
+        CalculateSpineRotation(leftFootGoal, leftFootStartPosition, rightFootStartPosition, true);
+    }
+
+    private void CalculateRightSideGoals()
+    {
+        rightFootGoal = laserPointerScript.goalsArray.First.Value;
+        laserPointerScript.goalsArray.RemoveFirst();
+        calculatedHipsPos = 
+            CalculateHipsPosition(rightFootGoal, leftFootStartPosition);
+        calculatedStepHeight = 
+            CalculateStepHeight(rightFootGoal, rightFootStartPosition, leftFootStartPosition);
+
+        coef = FitCurve(rightFootStartPosition, rightFootGoal);
+
+        //Racunanje goal-a za ruke
+        leftArmGoal = new Vector3(
+            calculatedHipsPos.x - handHipDistance, 
+            calculatedHipsPos.y + handOffsetForward,
+            calculatedHipsPos.z + 0.1f);
+
+        rightArmGoal = new Vector3(
+            calculatedHipsPos.x + handHipDistance,
+            calculatedHipsPos.y + handOffsetBack,
+            calculatedHipsPos.z - 0.07f);
+
+        //Pomeranje ramena
+        rightShoulderGoalRotation = Quaternion.Euler(
+            rightShoulderStartRotation.eulerAngles.x,
+            rightShoulderStartRotation.eulerAngles.y,
+            rightShoulderStartRotation.eulerAngles.z - shoulderAngle);
+
+        leftShoulderGoalRotation = Quaternion.Euler(
+            leftShoulderStartRotation.eulerAngles.x, 
+            leftShoulderStartRotation.eulerAngles.y,
+            leftShoulderStartRotation.eulerAngles.z - shoulderAngle);
+
+        currentRightShoulderRotation = rightShoulder.localRotation;
+        currentLeftShoulderRotation = leftShoulder.localRotation;
+
+        //Racunanje goal rotacije za stopalo
+        rightFootGoalRotation = Quaternion.FromToRotation(
+            Vector3.up, 
+            laserPointerScript.footAngleArray.First.Value) * rightFootStartRot;
+        laserPointerScript.footAngleArray.RemoveFirst();
+
+        rightFoot.rotation = rightFootGoalRotation;
+
+        //Racunanje za kicmu
+        CalculateSpineRotation(rightFootGoal, rightFootStartPosition, leftFootStartPosition, false);
+    }
+
+    private void DoLeftSideLerp()
+    {
+        //Hips lerp
+        hips.position = Vector3.Lerp(hipsStartPosition, calculatedHipsPos, HipsCurve.Evaluate(lerp));
+
+        //Pomeranje desne ruke u napred dok se leva noga pomera
+        rightArmTarget.position = 
+            Vector3.Lerp(rightArmStartPosition, rightArmGoal, lerp);
+        leftArmTarget.position = 
+            Vector3.Lerp(leftArmStartPosition, leftArmGoal, lerp);
+
+        //Slerp ramena
+        leftShoulder.localRotation = 
+            Quaternion.Slerp(currentLeftShoulderRotation, leftShoulderGoalRotation, lerp);
+        rightShoulder.localRotation = 
+            Quaternion.Slerp(currentRightShoulderRotation, rightShoulderGoalRotation, lerp);
+
+        //Slerp stopala
+        leftFoot.rotation = 
+            Quaternion.Slerp(leftFootStartRotLerp, leftFootGoalRotation, lerp);
+
+        //Slerp kicme
+        lowerSpine.rotation = 
+            Quaternion.Slerp(lowerSpineCurrentRot, lowerSpineGoalRot, lerp);
+        middleSpine.rotation = 
+            Quaternion.Slerp(middleSpineCurrentRot, middleSpineGoalRot, lerp);
+
+        Vector3 rot = upperSpine.eulerAngles;
+        upperSpine.rotation = 
+            Quaternion.Slerp(upperSpineCurrentRot, upperSpineGoalRot, lerp);
+        upperSpine.rotation = 
+            Quaternion.Euler(rot.x, upperSpine.eulerAngles.y, rot.z);
+
+        //Lerp noge
+        Vector3 currentFootPos = Vector3.Lerp(leftFootStartPosition, leftFootGoal, FeetCurve.Evaluate(lerp));
+        currentFootPos.y = Quadratic(coef, FeetCurve.Evaluate(lerp));
+        leftFoot.position = currentFootPos;
+    }
+    private void DoRightSideLerp()
+    {
+        //Hips lerp
+        hips.position = Vector3.Lerp(hipsStartPosition, calculatedHipsPos, HipsCurve.Evaluate(lerp));
+
+        //Pomeranje desne ruke u napred dok se leva noga pomera
+        rightArmTarget.position = Vector3.Lerp(rightArmStartPosition, rightArmGoal, lerp);
+        leftArmTarget.position = Vector3.Lerp(leftArmStartPosition, leftArmGoal, lerp);
+
+        //Slerp ramena
+        leftShoulder.localRotation = 
+            Quaternion.Slerp(currentLeftShoulderRotation, leftShoulderGoalRotation, lerp);
+        rightShoulder.localRotation = 
+            Quaternion.Slerp(currentRightShoulderRotation, rightShoulderGoalRotation, lerp);
+
+        //Slerp stopala
+        rightFoot.rotation = 
+            Quaternion.Slerp(rightFootStartRotLerp, rightFootGoalRotation, lerp);
+
+        //Slerp kicme
+        lowerSpine.rotation = 
+            Quaternion.Slerp(lowerSpineCurrentRot, lowerSpineGoalRot, lerp);
+        middleSpine.rotation = 
+            Quaternion.Slerp(middleSpineCurrentRot, middleSpineGoalRot, lerp);
+
+        Vector3 rot = upperSpine.eulerAngles;
+        upperSpine.rotation = 
+            Quaternion.Slerp(upperSpineCurrentRot, upperSpineGoalRot, lerp);
+        upperSpine.rotation = 
+            Quaternion.Euler(rot.x, upperSpine.eulerAngles.y, rot.z);
+
+        //Lerp noge
+        Vector3 currentFootPos = 
+            Vector3.Lerp(rightFootStartPosition, rightFootGoal, FeetCurve.Evaluate(lerp));
+        currentFootPos.y = Quadratic(coef, FeetCurve.Evaluate(lerp));
+        rightFoot.position = currentFootPos;
+    }
+
     private void CalculateSpineRotation(Vector3 stepGoal, Vector3 currentStep, Vector3 otherFootPos, bool isLeftLeg)
     {
         float zeroHeight = 0.05f;
         float bigStep = 0.9f;
 
         float xRotationLower = 0f;
-        float zRotationLower = 0f;
-
         float xRotationMiddle = 0f;
-        float zRotationMiddle = 0f;
+        float yRotationUpper = 10f;
 
-        float yRotationUpper = 0f;
-        //1 Za korak ka gore - noga ide gore dok druga ostaje dole - rotira se unapred za ugao 
-
-        //2 Korak ka gore - druga noga je vec gore - rotira se unazad za ugao
-
-        //3 Obican korak - mala razdaljina ista visina - nista
-
-        //4 Sirok korak - velika razdaljina ista visina - rotira se unazad za ugao
-
-        //5 Korak ka dole - druga noga ostaje gore prva se spusta - rotira se unapred za ugao i sa strane malo
-
-        //6 Korak ka dole - noga se spusta druga je vec dole - rotira se unazad za ugao i sa strane se vraca uspravno
-
-        //-----------------------------
         float footHeightDiff = stepGoal.y - currentStep.y;
         float otherFootHeightDiff = stepGoal.y - otherFootPos.y;
 
@@ -374,16 +425,26 @@ public class WalkingScript : MonoBehaviour
         }
 
         //Rotacija u ramenima
-        yRotationUpper = 10f;
         if (isLeftLeg)
         {
             yRotationUpper *= -1;
         }
 
 
-        lowerSpineGoalRot = Quaternion.Euler(lowerSpineDefaultRot.x + xRotationLower, lowerSpineDefaultRot.y, lowerSpineDefaultRot.z);
-        middleSpineGoalRot = Quaternion.Euler(middleSpineDefaultRot.x + xRotationMiddle, middleSpineDefaultRot.y, middleSpineDefaultRot.z);
-        upperSpineGoalRot = Quaternion.Euler(upperSpineDefaultRot.x, upperSpineDefaultRot.y + yRotationUpper, upperSpineDefaultRot.z);
+        lowerSpineGoalRot = Quaternion.Euler(
+            lowerSpineDefaultRot.x + xRotationLower, 
+            lowerSpineDefaultRot.y,
+            lowerSpineDefaultRot.z);
+
+        middleSpineGoalRot = Quaternion.Euler(
+            middleSpineDefaultRot.x + xRotationMiddle,
+            middleSpineDefaultRot.y,
+            middleSpineDefaultRot.z);
+
+        upperSpineGoalRot = Quaternion.Euler(
+            upperSpineDefaultRot.x,
+            upperSpineDefaultRot.y + yRotationUpper, 
+            upperSpineDefaultRot.z);
 
     }
 
@@ -405,20 +466,21 @@ public class WalkingScript : MonoBehaviour
 
         Vector3 feetMiddlepoint = Vector3.Lerp(leftFootPosition, rightFootPosition, 0.5f); 
 
-        return new Vector3(feetMiddlepoint.x, hipHeight - modellegHeight + (feetY - 0.1154f), feetMiddlepoint.z);
+        return new Vector3(
+            feetMiddlepoint.x, 
+            hipHeight - modellegHeight + (feetY - 0.1154f),
+            feetMiddlepoint.z);
         
     } 
     
     private float CalculateStepHeight(Vector3 goalPosition, Vector3 oldPostion, Vector3 otherFootPostion)
     {
-        //float diff = Mathf.Abs(goalPosition.y - oldPostion.y);
-        float h = Mathf.Max(goalPosition.y, oldPostion.y) + stepHeight;
-        return h;
+        return Mathf.Max(goalPosition.y, oldPostion.y) + stepHeight;;
     }
 
-    private float Quadratic(Vector3 coef, float x)
+    private float Quadratic(Vector3 coef, float X)
     {
-        return (coef.x * x * x) + (coef.y * x) + coef.z;
+        return (coef.x * X * X) + (coef.y * X) + coef.z;
     }
 
     private Vector3 FitCurve(Vector3 startPosition, Vector3 goalPosition)
@@ -432,12 +494,5 @@ public class WalkingScript : MonoBehaviour
         float b = y3 - c - a;
 
         return new Vector3(a, b, c);
-    }
-
-    private float Distance2D(Vector3 point)
-    {
-        Vector3 point2D = new Vector3(point.x, 0, point.z);
-
-        return Vector3.Distance(point2D, new Vector3());
     }
 }

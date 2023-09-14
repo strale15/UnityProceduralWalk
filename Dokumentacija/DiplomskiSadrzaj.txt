@@ -16,12 +16,18 @@ Primena inverzne kinematike u kreiranju animacije kretanja 3D modela
 	5.2 C# - (u unity-u)
 	5.3 Animation Rigging
 6 Implementacija
-	6.0 Definisanje koraka
-	6.1 Kretanje nogu
-	6.2 Kretanje ruku
-	6.3 Rotacija stopala
-	6.4 Rotacija ramena
-	6.5 Rotacija torzoa
+	6.1 Podesavanje Animation rig-a
+	6.2 Kamera
+		6.2.1 Kretanje kamere u prvom licu
+		6.2.2 Definisanje koraka
+	6.3 Kretanje nogu
+	6.4 Rotacija stopala
+	6.5 Kretanje ruku
+	6.6 Rotacija ramena
+	6.7 Rotacija torzoa
 7 Primer
+	7.1 Komande
+	7.2 Definisanje koraka
+	7.3 Play
 8 Ogranicenja i unapredjenja
 9 Zakljucak
