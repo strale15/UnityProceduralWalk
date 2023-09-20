@@ -243,8 +243,6 @@ public class WalkingScript : MonoBehaviour
             laserPointerScript.footAngleArray.First.Value) * leftFootStartRot;
 
         laserPointerScript.footAngleArray.RemoveFirst();
-
-        leftFoot.rotation = leftFootGoalRotation;
     }
 
     private void CalculateShouldersLeft()
@@ -489,7 +487,6 @@ public class WalkingScript : MonoBehaviour
             middlePoint.x, 
             hipHeight - modellegHeight + (feetY - 0.1154f),
             middlePoint.z);
-        
     } 
     
     private float CalculateStepHeight(Vector3 goalPosition, Vector3 currentPosition)
