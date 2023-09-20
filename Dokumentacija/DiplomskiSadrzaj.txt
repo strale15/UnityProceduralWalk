@@ -25,6 +25,7 @@ Primena inverzne kinematike u kreiranju animacije kretanja 3D modela
 	6.5 Kretanje ruku
 	6.6 Rotacija ramena
 	6.7 Rotacija torzoa
+	6.8 Pomeranje kukova
 7 Primer
 	7.1 Komande
 	7.2 Definisanje koraka

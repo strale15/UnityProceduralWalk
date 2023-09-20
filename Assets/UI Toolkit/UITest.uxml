@@ -7,7 +7,6 @@
                 <ui:Label tabindex="-1" text="Switch to move mode - M" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label2" class="basic-label info-label" style="width: 100%;" />
                 <ui:Label tabindex="-1" text="Confirm - E" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label3" class="basic-label info-label" style="width: 100%;" />
                 <ui:Label tabindex="-1" text="Play/Pause - P" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label4" class="basic-label info-label" style="width: 100%;" />
-                <ui:Label tabindex="-1" text="Undo last step - U" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label5" class="basic-label info-label" style="width: 100%; align-self: flex-start;" />
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="info-panel" style="flex-grow: 0; min-width: auto; min-height: auto; position: relative; width: 50%; color: rgb(0, 0, 0); flex-shrink: 1;">
