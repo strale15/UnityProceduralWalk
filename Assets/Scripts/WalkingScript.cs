@@ -414,39 +414,35 @@ public class WalkingScript : MonoBehaviour
 
         if (otherFootHeightDiff > zeroHeight)
         {
-            //Climbing up
+            //Visi korak
             xRotationLower = lowerSpineForwardAngle;
             xRotationMiddle = middleSpineForwardAngle;
 
         } else if (otherFootHeightDiff < -zeroHeight)
         {
-            //Climbing down
+            //Nizi korak
             xRotationLower = 0f;
             xRotationMiddle = 0f;
 
         } else if (footHeightDiff <= zeroHeight && footHeightDiff >= -zeroHeight)
         {
-            //Normal
             if (Vector3.Distance(stepGoal, otherFootPos) >= bigStep)
             {
                 //Dugacak korak
                 xRotationLower = -lowerSpineForwardAngle*1.2f;
                 xRotationMiddle = -middleSpineForwardAngle;
-            }
-            else
+            } else
             {
-                //Normal step
+                //Normalan korak
                 xRotationLower = 0f;
                 xRotationMiddle = 0f;
             }
         }
 
-        //Rotacija u ramenima
         if (isLeftLeg)
         {
             yRotationUpper *= -1;
         }
-
 
         lowerSpineGoalRot = Quaternion.Euler(
             lowerSpineDefaultRot.x + xRotationLower, 
@@ -462,7 +458,6 @@ public class WalkingScript : MonoBehaviour
             upperSpineDefaultRot.x,
             upperSpineDefaultRot.y + yRotationUpper, 
             upperSpineDefaultRot.z);
-
     }
 
     private Vector3 CalculateHipsPosition(Vector3 leftFootPosition, Vector3 rightFootPosition)
