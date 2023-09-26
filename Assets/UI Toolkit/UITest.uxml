@@ -24,10 +24,10 @@
                     </ui:VisualElement>
                     <ui:VisualElement style="flex-grow: 0; flex-direction: row; width: auto; min-height: 10px; min-width: 10px; align-self: flex-start; align-items: flex-start; justify-content: flex-start; flex-wrap: nowrap; opacity: 1; -unity-text-align: middle-left;">
                         <ui:Label tabindex="-1" text="Next foot is:" parse-escape-sequences="true" display-tooltip-when-elided="true" name="next-f-info" class="basic-label" />
-                        <ui:Label tabindex="-1" text="RIGHT" parse-escape-sequences="true" display-tooltip-when-elided="true" name="next-foot-r" class="basic-label" style="display: flex; color: rgb(245, 1, 223); -unity-font-style: bold;" />
+                        <ui:Label tabindex="-1" text="RIGHT" parse-escape-sequences="true" display-tooltip-when-elided="true" name="next-foot-r" class="basic-label" style="display: flex; color: rgb(245, 1, 223); -unity-font-style: bold; font-size: 19px;" />
                         <ui:Label tabindex="-1" text="LEFT" parse-escape-sequences="true" display-tooltip-when-elided="true" name="next-foot-l" class="basic-label" style="color: rgb(255, 250, 25); -unity-font-style: bold; display: none;" />
                     </ui:VisualElement>
-                    <ui:Label tabindex="-1" text="Animation is currently paused!" parse-escape-sequences="true" display-tooltip-when-elided="true" name="is-paused" class="basic-label" style="visibility: visible; width: auto; flex-wrap: nowrap; flex-direction: column; color: rgb(27, 253, 0); -unity-font-style: bold; -unity-text-align: upper-left; -unity-text-outline-width: 1.2px; text-shadow: 5px 5px 0 rgba(0, 0, 0, 0); -unity-text-outline-color: rgb(10, 10, 10); font-size: 26px;" />
+                    <ui:Label tabindex="-1" text="Animation is currently paused!" parse-escape-sequences="true" display-tooltip-when-elided="true" name="is-paused" class="basic-label" style="visibility: visible; width: auto; flex-wrap: nowrap; flex-direction: column; color: rgb(27, 253, 0); -unity-font-style: bold; -unity-text-align: upper-left; -unity-text-outline-width: 1.2px; text-shadow: 5px 5px 0 rgba(0, 0, 0, 0); -unity-text-outline-color: rgb(10, 10, 10); font-size: 21px;" />
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>

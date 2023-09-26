@@ -1,0 +1,31 @@
+Animacija je stvaranje iluzije pokreta poput crteza, figurica ili 
+kompijuterska animacija,
+fokus je na animiranju 3d modela.
+Oni se sastoje od lanca kostiju kojima manipulisemo i tako dobijamo animaciju
+Bilo koji proces animiranje je naporan posao, cilj je dati nekakvo resenje za
+ovaj problem
+
+aplikaciaj koja olaksa proces animiranja na interaktivan i jednostavan nacin
+
+Glavni stub aplikacije je inverzna kinematika, pa da se upoznamo sa njenim
+osnovama
+Matematicki proces, baziran najvise na geometriji.
+Sliz za odredjivanje pozicija i rotacija kostiju iz lanca na osnovu krajnje
+tacke ciju mi poziciju definisemo
+Koristi se u animiaciji i u robotici. Ako ste videli nekad ovakvu ili slicnu
+robotsku ruku ona radi na principu ik
+
+Za implementaciju je izabran juniti. To je pogon prvenstveno namenjen za kreiranje
+video igara. Odabran je jer sadrzi paket uz pomoc kojeg je lako bilo koji 
+model manipulisati uz pomoc ik
+Ove crvene kocki su tacke koje mi pomeramo a ruke i noge se podesavaju automatski
+Mogucnost daljeg razvoja npr pretvaranje u video igru
+
+Kako je osmisljena aplikacija
+Definisemo kretanje modela pomocu stopa kao sto je prikazano na slici,
+model koraca po ovim stopama i odekvatno reaguje pomerajuci osim nogu, ruke, ramena
+i kicmeni stub
+
+Da pogledamo kako to izgleda
+
+Pitanja

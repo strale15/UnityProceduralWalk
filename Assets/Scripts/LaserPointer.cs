@@ -76,15 +76,35 @@ public class LaserPointer : MonoBehaviour
                 {
                     leftMarker.position = hitInfo.point;
                     leftMarker.rotation = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
-                    leftMarker.localScale = new Vector3(1, 1, 1);
-                    rightMarker.localScale = new Vector3(0, 0, 0);
+
+                    if (!isPaused)
+                    {
+                        rightMarker.localScale = new Vector3(0, 0, 0);
+                        leftMarker.localScale = new Vector3(0, 0, 0);
+                    }
+                    else
+                    {
+                        leftMarker.localScale = new Vector3(1, 1, 1);
+                        rightMarker.localScale = new Vector3(0, 0, 0);
+                    }
+
+                    
                 }
                 else
                 {
                     rightMarker.position = hitInfo.point;
                     rightMarker.rotation = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
-                    rightMarker.localScale = new Vector3(1, 1, 1);
-                    leftMarker.localScale = new Vector3(0, 0, 0);
+
+                    if (!isPaused)
+                    {
+                        rightMarker.localScale = new Vector3(0, 0, 0);
+                        leftMarker.localScale = new Vector3(0, 0, 0);
+                    }
+                    else
+                    {
+                        rightMarker.localScale = new Vector3(1, 1, 1);
+                        leftMarker.localScale = new Vector3(0, 0, 0);
+                    }
                 }
             
                 
